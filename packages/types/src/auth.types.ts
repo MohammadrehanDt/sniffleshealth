@@ -1,0 +1,40 @@
+import type { AuthUser, UserRole } from "./user.types";
+
+export interface RequestOtpPayload {
+  email: string;
+  role: UserRole;
+}
+
+export interface VerifyOtpPayload {
+  email: string;
+  otp: string;
+}
+
+export interface VerifyOtpResponse {
+  email: string;
+  verified: boolean;
+  role: UserRole;
+}
+
+export interface CompleteSignupPayload {
+  email: string;
+  otp: string;
+  password: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  user: AuthUser;
+}
+
+export interface OtpChallengeResponse {
+  email: string;
+  role: UserRole;
+  expiresInMinutes: number;
+  otpCode?: string;
+}

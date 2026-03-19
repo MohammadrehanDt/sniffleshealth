@@ -8,9 +8,19 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+**/node_modules
 dist
+**/dist
 dist-ssr
+.turbo
+.nestjs
+.cache
+.pnpm-store
+coverage
+*.tsbuildinfo
 *.local
+.env.local
+.env.*.local
 
 # Editor directories and files
 .vscode/*
@@ -24,4 +34,6 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
+.env
+.env.local
+.env.*.local

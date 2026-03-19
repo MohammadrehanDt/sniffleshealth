@@ -1,0 +1,99 @@
+/**
+ * Chat message bubble components
+ * Used for displaying AI and user messages in chat interfaces
+ */
+
+import { Link } from "react-router-dom";
+import { FONTS } from "@/constants";
+import type { Message } from "@sniffles/types";
+
+interface AIMessageProps {
+  text: string;
+  sender?: string;
+  linkText?: string;
+  linkUrl?: string;
+}
+
+export function AIMessage({
+  text,
+  sender = "Sniffles Health Assitant",
+  linkText,
+  linkUrl,
+}: AIMessageProps) {
+  // Different styling for "AI Assistant" vs "Sniffles Health Assitant"
+  const isAIAssistant = sender === "AI Assistant";
+  const bgColor = isAIAssistant
+    ? "bg-neutral-light-gray"
+    : "bg-brand-cyan-lighter";
+  const textColor = isAIAssistant ? "text-text-slate" : "text-text-primary";
+  const borderRadius = isAIAssistant
+    ? "rounded-bl-4 rounded-br-4 rounded-tl-sm rounded-tr-4"
+    : "rounded-bl-3xl rounded-br-3xl rounded-tl-xl rounded-tr-3xl";
+  const senderColor = isAIAssistant ? "text-text-light" : "text-neutral-slate";
+
+  return (
+    <div className="flex items-start gap-3 animate-fade-in-slide-up" style={{ animationDelay: '0ms' }}>
+      <div
+        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-2 ${
+          isAIAssistant
+            ? "border border-border-medium bg-white"
+            : "bg-brand-cyan-light"
+        }`}
+      >
+        {isAIAssistant ? (
+          <div className="w-4 h-4 rounded-full bg-brand-cyan-dark"></div>
+        ) : (
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.5977 23.9219C11.5094 23.1193 11.5631 22.3528 11.5528 21.5873C11.5428 20.839 11.1955 20.4814 10.4482 20.467C9.71007 20.4528 8.97106 20.5217 8.23371 20.4224C6.98651 20.2546 6.03498 19.21 6.02244 17.9559C6.01012 16.724 6.06662 15.4895 6.00427 14.2606C5.93547 12.9046 6.53921 11.1118 8 11C8.43521 10.9667 6.56375 11.0055 7.00104 11C7.25404 10.9968 7.40309 11.1052 7.39706 11.375C7.39639 11.405 7.39938 11.4351 7.39931 11.4651C7.39612 12.7564 9.2619 13.9875 8.00104 14C7.8351 14.0016 8.16645 13.49 8.00104 13.5C7.45345 13.5332 7.61883 13.5343 7.60947 14.0837C7.58772 15.3602 7.5878 16.6376 7.61005 17.9141C7.62002 18.4858 8.02478 18.8442 8.61271 18.8558C9.23102 18.8681 9.85001 18.8449 10.4684 18.8552C12.0495 18.8815 13.1185 19.9654 13.1302 21.5443C13.1344 22.1152 13.1256 22.6863 13.1388 23.257C13.1559 23.9947 13.552 24.3988 14.2975 24.4074C15.444 24.4207 16.5909 24.4179 17.7374 24.402C18.4542 24.3921 18.8559 24.014 18.866 23.2683C18.8907 21.4507 18.8884 19.6324 18.868 17.8147C18.8605 17.1484 18.4686 16.8022 17.7942 16.7972C16.6023 16.7882 15.4103 16.7981 14.2184 16.795C12.6354 16.7909 11.5641 15.7443 11.5553 14.1733C11.5451 12.3404 11.55 10.5074 11.5557 8.67444C11.5601 7.2837 12.4824 6.17859 13.8671 6.07884C15.2637 5.97824 16.6759 5.9643 18.0715 6.09356C19.5555 6.23102 20.4381 7.28077 20.4585 8.77199C20.4657 9.29769 20.449 9.82368 20.4525 10.3495C20.4583 11.2155 20.7994 11.5528 21.6563 11.5505C22.1844 11.5491 22.7125 11.54 23.2405 11.5447C24.8428 11.5591 25.9792 12.6812 25.9925 14.2696C26.0024 15.4565 26.0031 16.6435 25.9977 17.8304C25.9915 19.1827 25.0567 20.2485 23.714 20.4354C23.2192 20.5043 23.485 21.1005 23.001 21C22.2603 20.8461 23.8358 19.8865 23.714 19.5C23.6215 19.2065 23.6982 18.4938 24.001 18.5C24.3479 18.5071 23.6543 19.0096 24.001 19C24.6551 18.982 24.3847 18.4682 24.3969 17.8174C24.4197 16.6008 24.4222 15.3832 24.3963 14.1668C24.3817 13.4849 23.9397 13.1026 23.2418 13.1215C22.5637 13.1399 21.8883 13.1905 21.2086 13.1188C19.9208 12.9831 18.9242 11.949 18.8826 10.6574C18.8638 10.072 18.8821 9.48558 18.8775 8.89966C18.8706 8.01886 18.4526 7.58808 17.5617 7.62665C16.4303 7.67564 15.2993 7.65443 14.1682 7.66926C13.4755 7.67834 13.139 8.00776 13.1353 8.69872C13.1256 10.5016 13.1237 12.3045 13.1307 14.1074C13.1336 14.8482 13.5045 15.2157 14.2496 15.2212C15.4264 15.23 16.6033 15.2182 17.7802 15.2191C19.3454 15.2204 20.4218 16.2259 20.4489 17.7843C20.4819 19.6768 20.4817 21.5706 20.4547 23.4632C20.4349 24.8468 19.2799 25.9422 17.828 25.9768C16.5764 26.0066 15.3232 26.0065 14.0714 25.9832C12.8757 25.9608 11.9413 25.1704 11.5977 23.9219Z"
+              fill="#164E63"
+            />
+          </svg>
+        )}
+      </div>
+      <div className="flex flex-col gap-1">
+        <span className={`text-xs font-inter leading-4 ${senderColor}`}>
+          {sender}
+        </span>
+        <div
+          className={`${bgColor} ${borderRadius} ${
+            isAIAssistant ? "pl-4 pr-4 py-3" : "px-4 py-3"
+          }`}
+        >
+          <div
+            className={`text-base font-inter leading-5  ${textColor}`}
+          >
+            <p className="mb-1">{text}</p>
+            {linkText && linkUrl && (
+              <Link
+                to={linkUrl}
+                className="inline-block mt-2 px-4 py-2 bg-brand-cyan-dark text-white font-inter rounded-lg hover:bg-brand-cyan-dark/90 transition-colors font-medium text-sm"
+              >
+                {linkText}
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function UserMessage({ text }: { text: string }) {
+  return (
+    <div className="flex flex-col items-end gap-1 animate-fade-in-slide-up" style={{ animationDelay: '0ms' }}>
+      <span className="text-text-light text-xs font-inter leading-4">You</span>
+      <div className="bg-brand-cyan-message rounded-bl-3xl rounded-br-2.5xl rounded-tl-3xl rounded-tr-xl pl-3 pr-3 py-3 min-h-[44px] flex items-center">
+        <p className="text-white text-base font-inter leading-6 tracking-body-tight">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
