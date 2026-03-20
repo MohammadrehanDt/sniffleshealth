@@ -1,29 +1,52 @@
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-const statusStyles = {
-  active: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  attention: "border-rose-200 bg-rose-50 text-rose-700",
-  completed: "border-slate-200 bg-slate-100 text-slate-700",
-  pending: "border-amber-200 bg-amber-50 text-amber-700",
-  scheduled: "border-cyan-200 bg-cyan-50 text-cyan-700",
-} as const;
+type StatusVariant = "success" | "warning" | "destructive" | "info" | "muted";
 
-type StatusTone = keyof typeof statusStyles;
+interface StatusConfig {
+  variant: StatusVariant;
+}
 
-type StatusBadgeProps = {
-  label: string;
-  tone: StatusTone;
-  className?: string;
+const STATUS_MAP: Record<string, StatusConfig> = {
+  Completed: { variant: "success" },
+  Active: { variant: "success" },
+  Normal: { variant: "success" },
+  Paid: { variant: "success" },
+  Confirmed: { variant: "success" },
+  "In Progress": { variant: "info" },
+  Scheduled: { variant: "info" },
+  Pending: { variant: "warning" },
+  Awaiting: { variant: "warning" },
+  Paused: { variant: "warning" },
+  Overdue: { variant: "destructive" },
+  Cancelled: { variant: "destructive" },
+  Abnormal: { variant: "destructive" },
 };
 
-export function StatusBadge({ label, tone, className }: StatusBadgeProps) {
+const variantClasses: Record<StatusVariant, string> = {
+  success: "bg-success/15 text-success border-success/20",
+  warning: "bg-warning/15 text-warning-foreground border-warning/20",
+  destructive: "bg-destructive/15 text-destructive border-destructive/20",
+  info: "bg-info/15 text-info border-info/20",
+  muted: "bg-muted text-muted-foreground border-border",
+};
+
+interface StatusBadgeProps {
+  status: string;
+  className?: string;
+}
+
+export function StatusBadge({ status, className }: StatusBadgeProps) {
+  const config = STATUS_MAP[status] ?? { variant: "muted" as StatusVariant };
+
   return (
-    <Badge
-      variant="outline"
-      className={cn("rounded-full px-3 py-1 text-xs font-semibold", statusStyles[tone], className)}
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
+        variantClasses[config.variant],
+        className
+      )}
     >
-      {label}
-    </Badge>
+      {status}
+    </span>
   );
 }
