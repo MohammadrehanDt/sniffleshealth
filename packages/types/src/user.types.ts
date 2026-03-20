@@ -17,11 +17,12 @@ export interface UserProfile {
   hipaaCompliant: boolean;
 }
 
-export type UserRole = "PATIENT" | "DOCTOR";
+export type UserRole = "patient" | "doctor";
 
 export interface AuthUser {
   id: string;
   email: string;
   role: UserRole;
+  fullName: string | null;
   emailVerified: boolean;
 }

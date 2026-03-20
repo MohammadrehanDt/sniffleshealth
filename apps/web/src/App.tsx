@@ -83,7 +83,7 @@ export default function App() {
             <Route
               path={ROUTES.DASHBOARD}
               element={
-                <ProtectedRoute roles={["PATIENT"]}>
+                <ProtectedRoute roles={["patient"]}>
                   <Dashboard />
                 </ProtectedRoute>
               }
@@ -91,7 +91,7 @@ export default function App() {
             <Route
               path={ROUTES.DOCTOR_DASHBOARD}
               element={
-                <ProtectedRoute roles={["DOCTOR"]}>
+                <ProtectedRoute roles={["doctor"]}>
                   <DoctorDashboardPage />
                 </ProtectedRoute>
               }
