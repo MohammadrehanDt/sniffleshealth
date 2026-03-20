@@ -20,7 +20,7 @@ export function Logo({ size = "md", className = "" }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
       <img
-        src="/images/logo.svg"
+        src="/images/logo.png"
         alt="Sniffles Health"
         width={currentSize.width}
         height={currentSize.height}

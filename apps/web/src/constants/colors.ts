@@ -1,71 +1,53 @@
 /**
- * Design system color constants
- * Extracted from inline styles throughout the application
+ * SnifflesHealth Design System - Color Tokens
+ *
+ * These mirror the CSS custom properties in global.css.
+ * Use Tailwind classes (e.g. bg-brand-500, text-neutral-800) whenever possible.
+ * Import these constants only when you need hex values in JS (charts, canvas, etc.).
  */
 
 export const COLORS = {
-  // Primary brand colors
+  // Primary brand palette
   primary: {
-    cyan: "#0891B2",
-    darkCyan: "#164E63",
-    darkerCyan: "#045866",
-    messageCyan: "#3e5e6a", // User message bubble color
-    lightCyan: "#DCE9EB",
-    lighterCyan: "#ECF3F4",
-    lightestCyan: "#D9F2F7",
-    paleCyan: "#C9E7EC",
-    paleBlue: "#B5E3EA",
+    700: "#0F5C63",
+    600: "#146D75",
+    500: "#1B7F88",
+    400: "#3C9AA3",
+    300: "#77BCC2",
+    200: "#B8DADD",
+    100: "#E8F4F5",
   },
 
-  // Neutral colors
+  // Neutrals
   neutral: {
-    white: "#FFFFFF",
-    offWhite: "#FCFAF8",
-    lightGray: "#F3F4F6",
-    gray: "#D6D3D1",
-    darkGray: "#78716C",
-    darkerGray: "#4B5563",
-    darkestGray: "#1C1917",
-    black: "#111827",
-    charcoal: "#1F2937",
-    slate: "#292524",
-    stone: "#57534E",
+    800: "#2F4246",
+    600: "#6A7E84",
+    500: "#8FA1A6",
+    300: "#D7E1E4",
+    200: "#E7EEF0",
+    black: "#000000",
   },
 
   // Semantic colors
   semantic: {
-    success: "#00C950",
-    green: "#34D399",
-    error: "#7F1D1D",
-    errorLight: "#FCE5E5",
-    errorMedium: "#AD6767",
-  },
-
-  // Text colors
-  text: {
-    primary: "#1C1917",
-    secondary: "#4B5563",
-    tertiary: "#78716C",
-    light: "#6A7282",
-    dark: "#111827",
-    charcoal: "#1F2937",
-    slate: "#364153",
+    success: "#2E9E6F",
+    warning: "#F2A93B",
+    error: "#E25555",
+    info: "#3B82F6",
   },
 
   // Background colors
   background: {
-    default: "#FCFAF8",
-    light: "#F3F4F6",
-    white: "#FFFFFF",
-    offWhite: "#FCFAF8",
-    dark: "#192D31",
-    darker: "#134E4A",
+    default: "#F5F8F9",
+    card: "#FFFFFF",
+    soft: "#EAF2F4",
+    section: "#DCE8EB",
   },
 
-  // Border colors
+  // Border
   border: {
-    light: "#D6D3D1",
-    medium: "#D1D5DB",
-    dark: "#E5E7EB",
+    DEFAULT: "#D7E1E4",
+    light: "#E7EEF0",
+    dark: "#8FA1A6",
   },
 } as const;

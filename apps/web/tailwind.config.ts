@@ -23,6 +23,13 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          700: "var(--primary-700)",
+          600: "var(--primary-600)",
+          500: "var(--primary-500)",
+          400: "var(--primary-400)",
+          300: "var(--primary-300)",
+          200: "var(--primary-200)",
+          100: "var(--primary-100)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -58,73 +65,70 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Brand colors - direct hex values for utility classes
+        // ── Design System Primary Palette ──
         brand: {
-          cyan: "#0891B2",
-          "cyan-dark": "#164E63",
-          "cyan-darker": "#045866",
-          "cyan-message": "#3e5e6a", // User message bubble color
-          "cyan-light": "#DCE9EB",
-          "cyan-lighter": "#ECF3F4",
-          "cyan-lightest": "#D9F2F7",
-          "cyan-pale": "#C9E7EC",
-          "cyan-pale-blue": "#B5E3EA",
+          700: "var(--primary-700)",
+          600: "var(--primary-600)",
+          500: "var(--primary-500)",
+          400: "var(--primary-400)",
+          300: "var(--primary-300)",
+          200: "var(--primary-200)",
+          100: "var(--primary-100)",
+          // Legacy aliases → new design tokens
+          cyan: "var(--primary-500)",
+          "cyan-dark": "var(--primary-700)",
+          "cyan-darker": "var(--primary-700)",
+          "cyan-message": "var(--primary-700)",
+          "cyan-light": "var(--primary-200)",
+          "cyan-lighter": "var(--primary-100)",
+          "cyan-lightest": "var(--primary-100)",
+          "cyan-pale": "var(--primary-200)",
+          "cyan-pale-blue": "var(--primary-300)",
         },
+        // ── Neutrals ──
         neutral: {
+          800: "var(--neutrals-800)",
+          600: "var(--neutrals-600)",
+          500: "var(--neutrals-500)",
+          300: "var(--neutrals-300)",
+          200: "var(--neutrals-200)",
+          black: "var(--neutrals-black)",
+          // Legacy aliases
           white: "#FFFFFF",
-          "off-white": "#FCFAF8",
-          "light-gray": "#F3F4F6",
-          gray: "#D6D3D1",
-          "dark-gray": "#78716C",
-          "darker-gray": "#4B5563",
-          "darkest-gray": "#1C1917",
-          black: "#111827",
-          charcoal: "#1F2937",
-          slate: "#292524",
-          stone: "#57534E",
+          gray: "var(--neutrals-300)",
         },
+        // ── Semantic Colors ──
         semantic: {
-          success: "#00C950",
-          green: "#34D399",
-          error: "#7F1D1D",
+          success: "var(--semantic-success)",
+          warning: "var(--semantic-warning)",
+          error: "var(--semantic-error)",
+          info: "var(--semantic-info)",
+          // Legacy aliases
+          green: "var(--semantic-success)",
           "error-light": "#FCE5E5",
-          "error-medium": "#AD6767",
         },
+        // ── Text Colors ──
         text: {
-          primary: "#1C1917",
-          secondary: "#4B5563",
-          tertiary: "#78716C",
-          light: "#6A7282",
-          dark: "#111827",
-          charcoal: "#1F2937",
-          slate: "#364153",
+          primary: "var(--neutrals-800)",
+          secondary: "var(--neutrals-600)",
+          muted: "var(--neutrals-500)",
         },
+        // ── Background Colors ──
         bg: {
-          default: "#FCFAF8",
-          light: "#F3F4F6",
-          white: "#FFFFFF",
-          "off-white": "#FCFAF8",
-          dark: "#192D31",
-          darker: "#134E4A",
+          default: "var(--bg-default)",
+          card: "var(--bg-card)",
+          soft: "var(--bg-soft)",
+          section: "var(--bg-section)",
+          // Legacy aliases
+          light: "var(--bg-soft)",
+          white: "var(--bg-card)",
+          dark: "var(--primary-700)",
         },
+        // ── Border Colors ──
         "border-color": {
-          light: "#D6D3D1",
-          medium: "#D1D5DB",
-          dark: "#E5E7EB",
-        },
-        // Legacy support (will be deprecated)
-        cyan: {
-          600: "#0891B2",
-        },
-        teal: {
-          900: "#134E4A",
-        },
-        warm: {
-          50: "#FAFAF9",
-          300: "#D6D3D1",
-          400: "#A8A29E",
-          600: "#57534E",
-          800: "#292524",
+          DEFAULT: "var(--neutrals-300)",
+          light: "var(--neutrals-200)",
+          dark: "var(--neutrals-500)",
         },
       },
       fontFamily: {
