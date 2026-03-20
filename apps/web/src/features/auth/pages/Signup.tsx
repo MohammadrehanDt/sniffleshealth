@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
+import type { UserRole } from "@sniffles/types";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { authApi } from "../services/auth.api";
@@ -15,14 +16,17 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const setSession = useAuthStore((state) => state.setSession);
 
+  const [role, setRole] = useState<UserRole>("patient");
+  
   // Form fields
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [npiNumber, setNpiNumber] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
   // Validation and UI states
-  const [errors, setErrors] = useState<{ fullName?: string; email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ fullName?: string; email?: string; password?: string; npiNumber?: string }>({});
   const [apiError, setApiError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,6 +53,12 @@ export default function SignupPage() {
     return "";
   };
 
+  const validateNpiNumber = (npi: string) => {
+    if (!npi.trim()) return "NPI Number is required";
+    if (!/^\d{10}$/.test(npi)) return "NPI Number must be exactly 10 digits";
+    return "";
+  };
+
   // Real-time validation handlers
   const handleFullNameChange = (val: string) => {
     setFullName(val);
@@ -65,14 +75,25 @@ export default function SignupPage() {
     setErrors(prev => ({ ...prev, password: validatePassword(val) }));
   };
 
+  const handleNpiNumberChange = (val: string) => {
+    setNpiNumber(val);
+    setErrors(prev => ({ ...prev, npiNumber: validateNpiNumber(val) }));
+  };
+
   const isFormValid = useMemo(() => {
     const fnErr = validateFullName(fullName);
     const emErr = validateEmail(email);
     const pwErr = validatePassword(password);
+    
+    if (role === "doctor") {
+      const npiErr = validateNpiNumber(npiNumber);
+      return !fnErr && !emErr && !pwErr && !npiErr && fullName && email && password && npiNumber;
+    }
+    
     return !fnErr && !emErr && !pwErr && fullName && email && password;
-  }, [fullName, email, password]);
+  }, [fullName, email, password, npiNumber, role]);
 
-  async function handlePatientSignup(event: FormEvent<HTMLFormElement>) {
+  async function handleSignup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isFormValid) return;
 
@@ -84,7 +105,8 @@ export default function SignupPage() {
         fullName: fullName.trim(),
         email: email.trim().toLowerCase(),
         password,
-        role: "patient",
+        role,
+        npiNumber: role === "doctor" ? npiNumber.trim() : undefined,
       });
       setSession(response);
       navigate(getDefaultRouteForRole(response.user.role), { replace: true });
@@ -94,6 +116,16 @@ export default function SignupPage() {
       setIsSubmitting(false);
     }
   }
+
+  const handleRoleChange = (newRole: UserRole) => {
+    setRole(newRole);
+    setApiError("");
+    setFullName("");
+    setEmail("");
+    setPassword("");
+    setNpiNumber("");
+    setErrors({});
+  };
 
   // Helper for background logos matching exact Figma dimensions/rotation
   const BackgroundLogo = ({ style }: { style: React.CSSProperties }) => (
@@ -137,9 +169,37 @@ export default function SignupPage() {
           </p>
         </div>
 
+        {/* Role Switcher */}
+        <div className="w-[368px] h-[57px] flex border-[1px] border-[#D7E1E4] rounded-[8px] p-[8px] gap-[8px] bg-[#FFFFFF] mx-auto items-center">
+          <button
+            onClick={() => handleRoleChange("patient")}
+            className={`w-[172px] h-[41px] rounded-[8px] transition-all flex items-center justify-center ${
+              role === "patient" 
+                ? "bg-[#146D75] text-white shadow-sm" 
+                : "bg-[#E8F4F5] text-[#146D75]"
+            }`}
+          >
+            <span className="font-medium text-[14px] leading-[1.2] text-center whitespace-nowrap">
+              Patient
+            </span>
+          </button>
+          <button
+            onClick={() => handleRoleChange("doctor")}
+            className={`w-[172px] h-[41px] rounded-[8px] transition-all flex items-center justify-center ${
+              role === "doctor" 
+                ? "bg-[#146D75] text-white shadow-sm" 
+                : "bg-[#E8F4F5] text-[#146D75]"
+            }`}
+          >
+            <span className="font-medium text-[14px] leading-[1.2] text-center whitespace-nowrap tracking-[0]">
+              Physician
+            </span>
+          </button>
+        </div>
+
         {/* Form Area */}
         <div className="w-[368px] min-h-[345px] flex flex-col mx-auto">
-          <form onSubmit={handlePatientSignup} className="flex flex-col gap-[16px] w-full">
+          <form onSubmit={handleSignup} className="flex flex-col gap-[16px] w-full">
             <FormField 
               label="Full Name" 
               error={errors.fullName}
@@ -166,6 +226,22 @@ export default function SignupPage() {
                 className={`h-[41px] border-[#D7E1E4] focus:border-[#146D75] focus-visible:ring-0 ${errors.email ? 'border-[#E25555] text-[#E25555]' : ''}`}
               />
             </FormField>
+
+            {role === "doctor" && (
+              <FormField 
+                label="NPI Number" 
+                error={errors.npiNumber}
+                labelClassName="text-[#2F4246] font-normal"
+              >
+                <Input
+                  value={npiNumber}
+                  onChange={(e) => handleNpiNumberChange(e.target.value)}
+                  placeholder="1234567890"
+                  maxLength={10}
+                  className={`h-[41px] border-[#D7E1E4] focus:border-[#146D75] focus-visible:ring-0 ${errors.npiNumber ? 'border-[#E25555] text-[#E25555]' : ''}`}
+                />
+              </FormField>
+            )}
 
             <FormField 
               label="Password" 
