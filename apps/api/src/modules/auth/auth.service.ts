@@ -49,6 +49,7 @@ export class AuthService {
         passwordHash,
         fullName: dto.fullName,
         role: dto.role as UserRole,
+        npiNumber: dto.npiNumber,
         emailVerifiedAt: new Date(),
       },
     });

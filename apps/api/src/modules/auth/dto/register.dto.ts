@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsString, Length, Matches, MinLength } from "class-validator";
+import { IsEmail, IsIn, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
 import type { UserRole } from "@sniffles/types";
 
 export class RegisterDto {
@@ -21,4 +21,10 @@ export class RegisterDto {
 
   @IsIn(["patient", "doctor"])
   role!: UserRole;
+
+  @IsOptional()
+  @IsString()
+  @Length(10, 10, { message: "NPI Number must be exactly 10 digits" })
+  @Matches(/^\d{10}$/, { message: "NPI Number must be numeric only" })
+  npiNumber?: string;
 }

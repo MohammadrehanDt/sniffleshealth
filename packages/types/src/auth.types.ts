@@ -22,6 +22,7 @@ export interface CompleteSignupPayload {
   otp: string;
   password: string;
   fullName?: string;
+  npiNumber?: string;
 }
 
 export interface RegisterPayload {
@@ -29,6 +30,7 @@ export interface RegisterPayload {
   password: string;
   fullName: string;
   role: UserRole;
+  npiNumber?: string;
 }
 
 export interface LoginPayload {
