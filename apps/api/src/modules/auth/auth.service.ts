@@ -12,6 +12,7 @@ import type {
   AuthResponse,
   AuthUser,
   OtpChallengeResponse,
+  RefreshTokenResponse,
 } from "@sniffles/types";
 import { PrismaService } from "../../prisma/prisma.service";
 import type { CompleteSignupDto } from "./dto/complete-signup.dto";
@@ -149,6 +150,35 @@ export class AuthService {
     return this.issueToken(user);
   }
 
+  async refresh(refreshToken: string): Promise<RefreshTokenResponse> {
+    try {
+      const payload = await this.jwtService.verifyAsync<
+        JwtPayload & { type?: string }
+      >(refreshToken);
+
+      if (payload.type !== "refresh") {
+        throw new UnauthorizedException("Invalid token type");
+      }
+
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+      });
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+
+      const tokens = await this.generateTokenPair({
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      });
+
+      return tokens;
+    } catch {
+      throw new UnauthorizedException("Invalid or expired refresh token");
+    }
+  }
+
   async me(userId: string): Promise<AuthUser> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
@@ -197,18 +227,37 @@ export class AuthService {
     fullName: string | null;
     emailVerifiedAt: Date | null;
   }): Promise<AuthResponse> {
-    const payload: JwtPayload = {
+    const basePayload: JwtPayload = {
       sub: user.id,
       email: user.email,
       role: user.role,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    const { accessToken, refreshToken } =
+      await this.generateTokenPair(basePayload);
 
     return {
       accessToken,
+      refreshToken,
       user: this.toAuthUser(user),
     };
+  }
+
+  private async generateTokenPair(
+    payload: JwtPayload,
+  ): Promise<RefreshTokenResponse> {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        { ...payload, type: "access" },
+        { expiresIn: "15m" },
+      ),
+      this.jwtService.signAsync(
+        { ...payload, type: "refresh" },
+        { expiresIn: "7d" },
+      ),
+    ]);
+
+    return { accessToken, refreshToken };
   }
 
   private toAuthUser(user: {

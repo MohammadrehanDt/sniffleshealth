@@ -25,4 +25,3 @@ export interface PharmacyOrder {
   totalPrice: string;
   pickupTime?: string; // e.g., "12:00 PM today"
 }
-

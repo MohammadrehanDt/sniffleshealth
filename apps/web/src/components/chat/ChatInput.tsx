@@ -5,7 +5,6 @@
 
 import { forwardRef } from "react";
 import { Plus, Mic, ArrowUp } from "lucide-react";
-import { FONTS } from "@/constants";
 
 interface ChatInputProps {
   value: string;

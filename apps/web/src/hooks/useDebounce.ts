@@ -8,10 +8,7 @@ export interface UseDebounceOptions {
  * useDebounce - Hook for debouncing values
  * Useful for search inputs, API calls, and other delayed operations
  */
-export function useDebounce<T>(
-  value: T,
-  options: UseDebounceOptions = {}
-): T {
+export function useDebounce<T>(value: T, options: UseDebounceOptions = {}): T {
   const { delay = 500 } = options;
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -34,7 +31,7 @@ export function useDebounce<T>(
  */
 export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
-  options: UseDebounceOptions = {}
+  options: UseDebounceOptions = {},
 ): T {
   const { delay = 500 } = options;
 
@@ -52,14 +49,12 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    setDebouncedCallback(
-      ((...args: Parameters<T>) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          callback(...args);
-        }, delay);
-      }) as T
-    );
+    setDebouncedCallback(((...args: Parameters<T>) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    }) as T);
 
     return () => {
       clearTimeout(timeoutId);
@@ -68,4 +63,3 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
 
   return debouncedCallback;
 }
-

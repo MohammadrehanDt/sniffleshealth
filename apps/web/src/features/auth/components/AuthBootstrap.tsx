@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { authApi } from "../services/auth.api";
+import { useCurrentUser } from "../hooks/useAuth";
 import { useAuthStore } from "@/stores/auth.store";
 
 export function AuthBootstrap() {
@@ -13,33 +13,37 @@ export function AuthBootstrap() {
     hasHydrated,
   } = useAuthStore();
 
+  const { data, error, isFetched } = useCurrentUser();
+
   useEffect(() => {
     if (!hasHydrated || didRunRef.current || isBootstrapped) {
       return;
     }
 
-    didRunRef.current = true;
-
     if (!token) {
+      didRunRef.current = true;
       setBootstrapped(true);
       return;
     }
 
-    authApi
-      .me(token)
-      .then((user) => {
-        setUser(user);
-      })
-      .catch(() => {
-        clearSession();
-      })
-      .finally(() => {
-        setBootstrapped(true);
-      });
+    if (!isFetched) return;
+
+    didRunRef.current = true;
+
+    if (error) {
+      clearSession();
+    } else if (data) {
+      setUser(data);
+    }
+
+    setBootstrapped(true);
   }, [
     clearSession,
+    data,
+    error,
     hasHydrated,
     isBootstrapped,
+    isFetched,
     setBootstrapped,
     setUser,
     token,

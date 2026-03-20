@@ -305,7 +305,7 @@ export interface SafetyStopCondition {
 
 export const SAFETY_STOPS: SafetyStopCondition[] = [
   {
-    trigger: (answer, category) => {
+    trigger: (answer) => {
       const lowerAnswer = answer.toLowerCase();
       return (
         lowerAnswer.includes("severe pain") || lowerAnswer.includes("severe")
@@ -315,7 +315,7 @@ export const SAFETY_STOPS: SafetyStopCondition[] = [
       "Based on your description of severe pain, we recommend seeking urgent care evaluation. Please visit your nearest emergency department or urgent care center.",
   },
   {
-    trigger: (answer, category) => {
+    trigger: (answer) => {
       const lowerAnswer = answer.toLowerCase();
       return (
         lowerAnswer.includes("eye injury") ||

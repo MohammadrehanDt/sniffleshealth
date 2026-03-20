@@ -24,10 +24,7 @@ export function DoctorChatOptions({
   let options: string[] | undefined;
   if (question.type === "yes_no") {
     options = ["Yes", "No"];
-  } else if (
-    question.type === "multiple_choice" &&
-    question.options
-  ) {
+  } else if (question.type === "multiple_choice" && question.options) {
     options = question.options;
   }
 

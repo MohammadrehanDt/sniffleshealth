@@ -4,8 +4,6 @@
  */
 
 import { Link } from "react-router-dom";
-import { FONTS } from "@/constants";
-import type { Message } from "@sniffles/types";
 
 interface AIMessageProps {
   text: string;
@@ -32,7 +30,10 @@ export function AIMessage({
   const senderColor = isAIAssistant ? "text-text-light" : "text-neutral-slate";
 
   return (
-    <div className="flex items-start gap-3 animate-fade-in-slide-up" style={{ animationDelay: '0ms' }}>
+    <div
+      className="flex items-start gap-3 animate-fade-in-slide-up"
+      style={{ animationDelay: "0ms" }}
+    >
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-2 ${
           isAIAssistant
@@ -66,9 +67,7 @@ export function AIMessage({
             isAIAssistant ? "pl-4 pr-4 py-3" : "px-4 py-3"
           }`}
         >
-          <div
-            className={`text-base font-inter leading-5  ${textColor}`}
-          >
+          <div className={`text-base font-inter leading-5  ${textColor}`}>
             <p className="mb-1">{text}</p>
             {linkText && linkUrl && (
               <Link
@@ -87,7 +86,10 @@ export function AIMessage({
 
 export function UserMessage({ text }: { text: string }) {
   return (
-    <div className="flex flex-col items-end gap-1 animate-fade-in-slide-up" style={{ animationDelay: '0ms' }}>
+    <div
+      className="flex flex-col items-end gap-1 animate-fade-in-slide-up"
+      style={{ animationDelay: "0ms" }}
+    >
       <span className="text-text-light text-xs font-inter leading-4">You</span>
       <div className="bg-brand-cyan-message rounded-bl-3xl rounded-br-2.5xl rounded-tl-3xl rounded-tr-xl pl-3 pr-3 py-3 min-h-[44px] flex items-center">
         <p className="text-white text-base font-inter leading-6 tracking-body-tight">

@@ -3,7 +3,7 @@ import "./global.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { AuthBootstrap } from "@/features/auth/components/AuthBootstrap";
@@ -28,11 +28,13 @@ import {
 import HIPAACompliance from "./pages/HIPAACompliance";
 import { KYC, AddressDetails, Dashboard } from "@/features/user/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
-import { PharmacySelection, PharmacyConfirmation } from "@/features/pharmacy/pages";
+import {
+  PharmacySelection,
+  PharmacyConfirmation,
+} from "@/features/pharmacy/pages";
 import Prescription from "./pages/Prescription";
 import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient();
+import { queryClient } from "@/lib/query-client";
 
 export default function App() {
   return (
@@ -72,18 +74,27 @@ export default function App() {
               path={ROUTES.PAYMENT_CONFIRMATION}
               element={<PaymentConfirmation />}
             />
-            <Route path={ROUTES.HIPAA_COMPLIANCE} element={<HIPAACompliance />} />
+            <Route
+              path={ROUTES.HIPAA_COMPLIANCE}
+              element={<HIPAACompliance />}
+            />
             <Route path={ROUTES.KYC} element={<KYC />} />
             <Route path={ROUTES.ADDRESS_DETAILS} element={<AddressDetails />} />
             <Route path={ROUTES.FINDING_DOCTOR} element={<FindingDoctor />} />
             <Route path={ROUTES.DOCTOR_CHAT} element={<DoctorChat />} />
             <Route path={ROUTES.PRESCRIPTION} element={<Prescription />} />
-            <Route path={ROUTES.PHARMACY_SELECTION} element={<PharmacySelection />} />
-            <Route path={ROUTES.PHARMACY_CONFIRMATION} element={<PharmacyConfirmation />} />
+            <Route
+              path={ROUTES.PHARMACY_SELECTION}
+              element={<PharmacySelection />}
+            />
+            <Route
+              path={ROUTES.PHARMACY_CONFIRMATION}
+              element={<PharmacyConfirmation />}
+            />
             <Route
               path={ROUTES.DASHBOARD}
               element={
-                <ProtectedRoute roles={["patient"]}>
+                <ProtectedRoute roles={["PATIENT"]}>
                   <Dashboard />
                 </ProtectedRoute>
               }
@@ -91,7 +102,7 @@ export default function App() {
             <Route
               path={ROUTES.DOCTOR_DASHBOARD}
               element={
-                <ProtectedRoute roles={["doctor"]}>
+                <ProtectedRoute roles={["DOCTOR"]}>
                   <DoctorDashboardPage />
                 </ProtectedRoute>
               }

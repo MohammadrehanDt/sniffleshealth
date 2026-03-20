@@ -1,9 +1,14 @@
 import { Body, Controller, Get, Post, UseGuards, Inject } from "@nestjs/common";
-import type { AuthResponse, AuthUser } from "@sniffles/types";
+import type {
+  AuthResponse,
+  AuthUser,
+  RefreshTokenResponse,
+} from "@sniffles/types";
 import { CurrentUser } from "./decorators/current-user.decorator";
 import { AuthService } from "./auth.service";
 import { CompleteSignupDto } from "./dto/complete-signup.dto";
 import { LoginDto } from "./dto/login.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { RequestOtpDto } from "./dto/request-otp.dto";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
@@ -37,6 +42,11 @@ export class AuthController {
   @Post("login")
   async login(@Body() dto: LoginDto): Promise<AuthResponse> {
     return this.authService.login(dto);
+  }
+
+  @Post("refresh")
+  async refresh(@Body() dto: RefreshTokenDto): Promise<RefreshTokenResponse> {
+    return this.authService.refresh(dto.refreshToken);
   }
 
   @Get("me")

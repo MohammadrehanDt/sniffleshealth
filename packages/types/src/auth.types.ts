@@ -40,7 +40,17 @@ export interface LoginPayload {
 
 export interface AuthResponse {
   accessToken: string;
+  refreshToken: string;
   user: AuthUser;
+}
+
+export interface RefreshTokenPayload {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface OtpChallengeResponse {

@@ -1,6 +1,5 @@
 import { Check } from "lucide-react";
 import type { Symptom } from "@sniffles/types";
-import { FONTS } from "@/constants";
 import { cn } from "@/lib/utils";
 
 export interface SymptomSelectorProps {
@@ -57,14 +56,16 @@ function SymptomPill({ name, selected, onClick }: SymptomPillProps) {
         "flex items-center gap-2 px-5 py-5 rounded-2xl border-2 font-inter transition-all",
         selected
           ? "border-brand-cyan bg-white"
-          : "border-border-medium bg-white hover:border-brand-cyan/50"
+          : "border-border-medium bg-white hover:border-brand-cyan/50",
       )}
     >
       {selected && <Check className="w-6 h-6 text-brand-cyan-dark" />}
       <span
         className={cn(
           "text-base",
-          selected ? "font-semibold text-brand-cyan-dark" : "font-medium text-text-secondary"
+          selected
+            ? "font-semibold text-brand-cyan-dark"
+            : "font-medium text-text-secondary",
         )}
       >
         {name}
@@ -72,4 +73,3 @@ function SymptomPill({ name, selected, onClick }: SymptomPillProps) {
     </button>
   );
 }
-

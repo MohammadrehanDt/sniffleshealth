@@ -1,4 +1,3 @@
-import { FONTS } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { Doctor } from "@sniffles/types";
 
@@ -34,7 +33,7 @@ export function DoctorCard({
           ? "border-brand-cyan border-2 bg-teal-50"
           : "border-border-dark",
         onClick && "cursor-pointer hover:border-brand-cyan",
-        className
+        className,
       )}
     >
       <div className="flex items-start gap-3">
@@ -79,4 +78,3 @@ function getInitials(name: string): string {
   }
   return name.substring(0, 2).toUpperCase();
 }
-

@@ -14,9 +14,24 @@ export default function Prescription() {
   const handleSelectPharmacy = () => {
     // Set prescription items for the pharmacy selection page
     setPrescriptionItems([
-      { id: "1", name: "Amoxicillin 500mg", type: "tablets", quantity: "10 Caps" },
-      { id: "2", name: "Ibuprofen 400mg", type: "tablets", quantity: "10 Caps" },
-      { id: "3", name: "B-Complex Caps", type: "capsules", quantity: "10 Caps" },
+      {
+        id: "1",
+        name: "Amoxicillin 500mg",
+        type: "tablets",
+        quantity: "10 Caps",
+      },
+      {
+        id: "2",
+        name: "Ibuprofen 400mg",
+        type: "tablets",
+        quantity: "10 Caps",
+      },
+      {
+        id: "3",
+        name: "B-Complex Caps",
+        type: "capsules",
+        quantity: "10 Caps",
+      },
     ]);
     navigate(ROUTES.PHARMACY_SELECTION);
   };

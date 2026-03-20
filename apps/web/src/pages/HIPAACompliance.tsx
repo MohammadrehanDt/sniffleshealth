@@ -40,7 +40,10 @@ export default function HIPAACompliance() {
 
   return (
     <div className="min-h-screen bg-neutral-light-gray flex flex-col">
-     <div className="bg-neutral-off-white pt-4"> <PageHeader showLogo={true} /></div>
+      <div className="bg-neutral-off-white pt-4">
+        {" "}
+        <PageHeader showLogo={true} />
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden bg-neutral-off-white flex items-center justify-center">

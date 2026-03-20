@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ROUTES, FONTS } from "@/constants";
+import { ROUTES } from "@/constants";
 import { PageHeader, AppFooter } from "@/components/layout";
 import { useFormNavigation } from "../hooks";
 import { useConsultationStore } from "@/stores/consultation.store";
@@ -8,7 +7,6 @@ import { useConsultationFlow } from "../hooks";
 import { CATEGORY_SYMPTOMS } from "../constants/symptoms";
 
 export default function SummaryConsultation() {
-  const navigate = useNavigate();
   const { getStepInfo, goToNext } = useFormNavigation();
   const stepInfo = getStepInfo();
   const { selectedCategory, selectedSymptoms } = useConsultationStore();
@@ -17,7 +15,7 @@ export default function SummaryConsultation() {
   // Generate AI assessment
   const generateAIAssessment = () => {
     if (!selectedCategory) return "";
-    
+
     return "Based on the information you provided, your symptoms may be consistent with a common medical condition within this category. This summary is for informational purposes only and does not constitute a medical diagnosis. A licensed healthcare professional will review your information during the consultation.";
   };
 
@@ -26,8 +24,8 @@ export default function SummaryConsultation() {
     if (!selectedCategory) return [];
     const symptoms = CATEGORY_SYMPTOMS[selectedCategory];
     return symptoms
-      .filter(s => selectedSymptoms.includes(s.id))
-      .map(s => s.name);
+      .filter((s) => selectedSymptoms.includes(s.id))
+      .map((s) => s.name);
   };
 
   // Auto-transition to consultation page after a brief moment
@@ -145,7 +143,10 @@ export default function SummaryConsultation() {
                 <div className="flex flex-col gap-2">
                   {currentMedicalData.socialHistory.length > 0 ? (
                     currentMedicalData.socialHistory.map((item, idx) => (
-                      <p key={idx} className="text-text-slate text-sm font-inter">
+                      <p
+                        key={idx}
+                        className="text-text-slate text-sm font-inter"
+                      >
                         {item.type}: {item.level}
                       </p>
                     ))

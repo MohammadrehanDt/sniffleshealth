@@ -112,4 +112,3 @@ export const useDoctorConsultationStore = create<DoctorConsultationState>(
     resetConsultation: () => set(initialState),
   }),
 );
-

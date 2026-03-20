@@ -17,7 +17,7 @@ export interface UserProfile {
   hipaaCompliant: boolean;
 }
 
-export type UserRole = "patient" | "doctor";
+export type UserRole = "PATIENT" | "DOCTOR";
 
 export interface AuthUser {
   id: string;

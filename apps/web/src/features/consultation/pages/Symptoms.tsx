@@ -1,7 +1,6 @@
 import { Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { HealthCategory } from "@sniffles/types";
-import { ROUTES, FONTS } from "@/constants";
+import { ROUTES } from "@/constants";
 import { PageHeader, AppFooter } from "@/components/layout";
 import { SymptomSelector } from "../components";
 import { useConsultationFlow, useFormNavigation } from "../hooks";

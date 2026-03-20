@@ -1,4 +1,12 @@
-import { IsEmail, IsIn, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsIn,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  MinLength,
+} from "class-validator";
 import type { UserRole } from "@sniffles/types";
 
 export class RegisterDto {
@@ -7,9 +15,13 @@ export class RegisterDto {
 
   @IsString()
   @MinLength(8, { message: "Password must be at least 8 characters" })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
-    message: "Password must have at least 1 uppercase, 1 lowercase, 1 number, and 1 special character",
-  })
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    {
+      message:
+        "Password must have at least 1 uppercase, 1 lowercase, 1 number, and 1 special character",
+    },
+  )
   password!: string;
 
   @IsString()
@@ -19,7 +31,7 @@ export class RegisterDto {
   })
   fullName!: string;
 
-  @IsIn(["patient", "doctor"])
+  @IsIn(["PATIENT", "DOCTOR"])
   role!: UserRole;
 
   @IsOptional()

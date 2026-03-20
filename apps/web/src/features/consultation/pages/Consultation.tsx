@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { MessageSquare, Video, Mic, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES, FONTS } from "@/constants";
+import { ROUTES } from "@/constants";
 import { PageHeader, AppFooter } from "@/components/layout";
-import { DoctorCard } from "@/features/doctor/components";
 import { useFormNavigation } from "../hooks";
 import { useDoctorStore } from "@/stores/doctor.store";
 import type { Doctor, ConsultationType } from "@sniffles/types";
@@ -14,10 +13,7 @@ export default function Consultation() {
   const stepInfo = getStepInfo();
   const { setSelectedDoctor, selectedDoctor } = useDoctorStore();
 
-  // Pre-select the text chat doctor (Dr. Evelyn Reed)
-  const [selectedDoctorId, setSelectedDoctorId] = useState<string>("1");
-  const [selectedType, setSelectedType] =
-    useState<ConsultationType>("video");
+  const [selectedType, setSelectedType] = useState<ConsultationType>("video");
 
   // Define available doctors
   const doctors: Record<string, Doctor> = {
@@ -48,17 +44,7 @@ export default function Consultation() {
     if (!selectedDoctor || selectedDoctor.id !== "1") {
       setSelectedDoctor(doctors["1"]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount
-  
-  // Handle doctor selection
-  const handleDoctorSelect = (doctorId: string) => {
-    setSelectedDoctorId(doctorId);
-    const doctor = doctors[doctorId];
-    if (doctor) {
-      setSelectedDoctor(doctor);
-    }
-  };
 
   // Sample data - in a real app, this would come from state/API
   const symptoms = ["Fever", "Persistent Cough", "Headache", "Fatigue"];

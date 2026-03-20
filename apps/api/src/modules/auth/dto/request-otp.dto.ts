@@ -5,7 +5,7 @@ export class RequestOtpDto {
   @IsEmail()
   email!: string;
 
-  @IsIn(["patient", "doctor"])
+  @IsIn(["PATIENT", "DOCTOR"])
   role!: UserRole;
 
   @IsOptional()

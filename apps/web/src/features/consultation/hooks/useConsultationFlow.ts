@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useConsultationStore } from "@/stores";
 import { ROUTES } from "@/constants";
-import type { MedicalData, Symptom } from "@sniffles/types";
+import type { MedicalData } from "@sniffles/types";
 
 export interface UseConsultationFlowReturn {
   // State
@@ -104,4 +104,3 @@ export function useConsultationFlow(): UseConsultationFlowReturn {
     reset,
   };
 }
-

@@ -18,7 +18,10 @@ import { PrismaModule } from "../../prisma/prisma.module";
         global: true,
         secret: configService.get<string>("JWT_SECRET", "replace-me"),
         signOptions: {
-          expiresIn: configService.get<string>("JWT_EXPIRES_IN", "7d") as StringValue,
+          expiresIn: configService.get<string>(
+            "JWT_EXPIRES_IN",
+            "7d",
+          ) as StringValue,
         },
       }),
     }),

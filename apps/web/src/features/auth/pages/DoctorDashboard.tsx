@@ -12,7 +12,11 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { useAuthStore } from "@/stores/auth.store";
 
 const physicianQueue = [
-  { patient: "Ava Thompson", issue: "Respiratory follow-up", status: "Pending" },
+  {
+    patient: "Ava Thompson",
+    issue: "Respiratory follow-up",
+    status: "Pending",
+  },
   { patient: "Noah Rivera", issue: "Medication review", status: "Scheduled" },
   { patient: "Emma Collins", issue: "SOAP note approval", status: "Attention" },
 ];
@@ -21,7 +25,7 @@ export default function DoctorDashboardPage() {
   const { user, clearSession } = useAuthStore();
 
   return (
-    <AppShell role="doctor">
+    <AppShell role="DOCTOR">
       <AppHeader
         title="Physician Dashboard"
         description="Role-based shell for clinical review workflows. The full consultation review and prescription tools land in later phases."
@@ -40,7 +44,8 @@ export default function DoctorDashboardPage() {
           <CardHeader>
             <CardTitle className="text-xl">Review queue</CardTitle>
             <CardDescription>
-              Shared dashboard layout now supports role-specific physician panels.
+              Shared dashboard layout now supports role-specific physician
+              panels.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -77,19 +82,21 @@ export default function DoctorDashboardPage() {
               <div>
                 <CardTitle className="text-xl">Operational baseline</CardTitle>
                 <CardDescription>
-                  Phase 3 establishes the physician shell and reusable component pattern.
+                  Phase 3 establishes the physician shell and reusable component
+                  pattern.
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-muted-foreground">
             <p>
-              The auth layer from Phase 2 already protects this route by role. This shell is the
-              foundation for consultation review, SOAP notes, and prescription actions.
+              The auth layer from Phase 2 already protects this route by role.
+              This shell is the foundation for consultation review, SOAP notes,
+              and prescription actions.
             </p>
             <div className="rounded-2xl bg-[#f6f1eb] p-4 text-foreground">
-              Next physician phases can drop richer modules into this layout without redesigning the
-              sidebar or header.
+              Next physician phases can drop richer modules into this layout
+              without redesigning the sidebar or header.
             </div>
           </CardContent>
         </Card>

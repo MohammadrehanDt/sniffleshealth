@@ -18,4 +18,3 @@ export const useDoctorStore = create<DoctorStore>((set) => ({
 
   clearSelectedDoctor: () => set({ selectedDoctor: null }),
 }));
-

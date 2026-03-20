@@ -18,7 +18,7 @@ export function getSymptomName(id: string): string {
       return symptom.name;
     }
   }
-  
+
   // Fallback if not found
   return `Symptom ${id}`;
 }
@@ -29,7 +29,7 @@ export function getSymptomName(id: string): string {
  */
 export function getSymptomsFromIds(ids: string[]): Symptom[] {
   const symptoms: Symptom[] = [];
-  
+
   for (const id of ids) {
     for (const categorySymptoms of Object.values(CATEGORY_SYMPTOMS)) {
       const symptom = categorySymptoms.find((s) => s.id === id);
@@ -39,7 +39,7 @@ export function getSymptomsFromIds(ids: string[]): Symptom[] {
       }
     }
   }
-  
+
   return symptoms;
 }
 

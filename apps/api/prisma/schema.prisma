@@ -8,8 +8,8 @@ datasource db {
 }
 
 enum UserRole {
-  patient
-  doctor
+  PATIENT
+  DOCTOR
 }
 
 model User {

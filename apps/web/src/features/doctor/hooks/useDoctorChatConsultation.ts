@@ -44,12 +44,8 @@ export interface UseDoctorChatConsultationReturn {
 }
 
 export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
-  const {
-    selectedCategory,
-    selectedSymptoms,
-    medicalData,
-    aiAssessment,
-  } = useConsultationStore();
+  const { selectedCategory, selectedSymptoms, medicalData, aiAssessment } =
+    useConsultationStore();
   const { selectedDoctor } = useDoctorStore();
   const {
     consultationAnswers,
@@ -107,7 +103,7 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
     // Use ref to ensure we only initialize once, even if effect re-runs
     if (!initializationRef.current && selectedCategory) {
       initializationRef.current = true;
-      
+
       // Clear any existing messages from previous chat (Medical Profile)
       // Use a small delay to ensure this happens before initialization
       clearMessages();
@@ -139,15 +135,18 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
           const context = getQuestionContext();
           const firstQuestion = PHASE_1_QUESTIONS[0];
           const formattedText = formatQuestionText(firstQuestion, context);
-          
+
           // Determine options
           let options: string[] | undefined;
           if (firstQuestion.type === "yes_no") {
             options = ["Yes", "No"];
-          } else if (firstQuestion.type === "multiple_choice" && firstQuestion.options) {
+          } else if (
+            firstQuestion.type === "multiple_choice" &&
+            firstQuestion.options
+          ) {
             options = firstQuestion.options;
           }
-          
+
           sendAIMessage(formattedText, doctorName, options);
           setIsWaitingForAnswer(true);
           lastQuestionKeyRef.current = firstQuestion.key;
@@ -159,7 +158,6 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
     return () => {
       initializationRef.current = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]); // Only depend on selectedCategory to prevent re-runs
 
   // Ask a question
@@ -177,7 +175,11 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
         options = question.options;
       }
 
-      sendAIMessage(formattedText, selectedDoctor?.name || "Dr. [Name]", options);
+      sendAIMessage(
+        formattedText,
+        selectedDoctor?.name || "Dr. [Name]",
+        options,
+      );
       setIsWaitingForAnswer(true);
       lastQuestionKeyRef.current = question.key;
     },
@@ -198,7 +200,10 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
         setConsultationAnswer(followupKey, answer);
         waitingForFollowupRef.current = null;
         // Check safety stops after storing answer
-        const updatedAnswers = { ...consultationAnswers, [followupKey]: answer };
+        const updatedAnswers = {
+          ...consultationAnswers,
+          [followupKey]: answer,
+        };
         const safetyStop = checkSafetyStops(answer, updatedAnswers);
         if (safetyStop) {
           setSafetyStop(true, safetyStop.message);
@@ -240,7 +245,10 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
           );
           setIsWaitingForAnswer(true);
           // Check safety stops
-          const updatedAnswers = { ...consultationAnswers, [question.key]: "Yes" };
+          const updatedAnswers = {
+            ...consultationAnswers,
+            [question.key]: "Yes",
+          };
           const safetyStop = checkSafetyStops(answer, updatedAnswers);
           if (safetyStop) {
             setSafetyStop(true, safetyStop.message);
@@ -302,14 +310,14 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
       }
 
       // Check safety stops after storing answer
-      const updatedAnswers = { ...consultationAnswers, [question.key]: storedValue };
+      const updatedAnswers = {
+        ...consultationAnswers,
+        [question.key]: storedValue,
+      };
       const safetyStop = checkSafetyStops(answer, updatedAnswers);
       if (safetyStop) {
         setSafetyStop(true, safetyStop.message);
-        sendAIMessage(
-          safetyStop.message,
-          selectedDoctor?.name || "Dr. [Name]",
-        );
+        sendAIMessage(safetyStop.message, selectedDoctor?.name || "Dr. [Name]");
       }
     },
     [
@@ -446,7 +454,8 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
         setConsultationComplete(true);
 
         // Check if prescription is ready (if Q4.3 was answered Yes)
-        const prescriptionReadyAnswer = consultationAnswers["prescription_ready"];
+        const prescriptionReadyAnswer =
+          consultationAnswers["prescription_ready"];
         if (prescriptionReadyAnswer === "Yes") {
           setPrescriptionReady(true);
         }
@@ -587,7 +596,10 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
       );
       return phase2Questions[currentQuestionIndex] || null;
     } else if (currentPhase === "medical_review") {
-      const phase3Questions = getPhase3Questions(medicalData, consultationAnswers);
+      const phase3Questions = getPhase3Questions(
+        medicalData,
+        consultationAnswers,
+      );
       return phase3Questions[currentQuestionIndex] || null;
     } else if (currentPhase === "final") {
       return PHASE_4_QUESTIONS[currentQuestionIndex] || null;
@@ -612,4 +624,3 @@ export function useDoctorChatConsultation(): UseDoctorChatConsultationReturn {
     safetyStopMessage,
   };
 }
-

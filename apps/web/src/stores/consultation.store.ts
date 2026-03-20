@@ -43,8 +43,7 @@ export const useConsultationStore = create<ConsultationStore>((set) => ({
 
   setSelectedCategory: (category) => set({ selectedCategory: category }),
 
-  setSelectedSymptoms: (symptomIds) =>
-    set({ selectedSymptoms: symptomIds }),
+  setSelectedSymptoms: (symptomIds) => set({ selectedSymptoms: symptomIds }),
 
   toggleSymptom: (symptomId) =>
     set((state) => ({

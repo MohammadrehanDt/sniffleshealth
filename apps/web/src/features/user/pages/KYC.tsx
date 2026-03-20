@@ -1,5 +1,16 @@
 import { useState, useRef, useCallback } from "react";
-import { Smile, Car, FileText, MapPin, Mail, Phone, ChevronDown, Upload, X, Check } from "lucide-react";
+import {
+  Smile,
+  Car,
+  FileText,
+  MapPin,
+  Mail,
+  Phone,
+  ChevronDown,
+  Upload,
+  X,
+  Check,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { AddressData } from "@sniffles/types";
 import { ROUTES } from "@/constants";
@@ -23,9 +34,8 @@ export default function KYC() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Use localStorage to persist form data, with fallback to store or defaults
-  const { value: formData, setValue: setFormData } = useLocalStorage<AddressData>(
-    STORAGE_KEY,
-    {
+  const { value: formData, setValue: setFormData } =
+    useLocalStorage<AddressData>(STORAGE_KEY, {
       defaultValue: {
         email: "johndoe@gmail.com",
         phone: "+021 7348-2839",
@@ -34,8 +44,7 @@ export default function KYC() {
         pincode: "",
         city: "New York",
       },
-    }
-  );
+    });
 
   const handleInputChange = (field: keyof AddressData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -119,43 +128,57 @@ export default function KYC() {
                     <Smile className="w-6 h-6 text-neutral-dark-gray" />
                   </div> */}
 
-
                   {/* Step Indicator */}
                   <div className="flex items-center gap-2">
-                    <div className={`flex items-center gap-2 ${currentStep === "kyc" ? "text-brand-cyan-dark" : "text-brand-cyan-dark"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-inter font-semibold text-sm ${
-                        currentStep === "kyc" 
-                          ? "bg-brand-cyan-dark text-white" 
-                          : "bg-brand-cyan-dark text-white"
-                      }`}>
-                        {currentStep === "kyc" ? "1" : <Check className="w-4 h-4" />}
+                    <div
+                      className={`flex items-center gap-2 ${currentStep === "kyc" ? "text-brand-cyan-dark" : "text-brand-cyan-dark"}`}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center font-inter font-semibold text-sm ${
+                          currentStep === "kyc"
+                            ? "bg-brand-cyan-dark text-white"
+                            : "bg-brand-cyan-dark text-white"
+                        }`}
+                      >
+                        {currentStep === "kyc" ? (
+                          "1"
+                        ) : (
+                          <Check className="w-4 h-4" />
+                        )}
                       </div>
-                      <span className="text-sm font-inter font-medium">KYC Document</span>
+                      <span className="text-sm font-inter font-medium">
+                        KYC Document
+                      </span>
                     </div>
                     <div className="w-12 h-0.5 bg-border-medium"></div>
-                    <div className={`flex items-center gap-2 ${currentStep === "address" ? "text-brand-cyan-dark" : "text-text-secondary"}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-inter font-semibold text-sm ${
-                        currentStep === "address" 
-                          ? "bg-brand-cyan-dark text-white" 
-                          : "bg-neutral-light-gray text-text-secondary"
-                      }`}>
+                    <div
+                      className={`flex items-center gap-2 ${currentStep === "address" ? "text-brand-cyan-dark" : "text-text-secondary"}`}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center font-inter font-semibold text-sm ${
+                          currentStep === "address"
+                            ? "bg-brand-cyan-dark text-white"
+                            : "bg-neutral-light-gray text-text-secondary"
+                        }`}
+                      >
                         2
                       </div>
-                      <span className="text-sm font-inter font-medium">Address Details</span>
+                      <span className="text-sm font-inter font-medium">
+                        Address Details
+                      </span>
                     </div>
                   </div>
                 </div>
-                  {/* Main Heading */}
-                  <h1 className="text-5xl font-inter-display font-medium leading-44 tracking-tight text-center text-neutral-charcoal">
-                    Complete KYC & Address
-                  </h1>
+                {/* Main Heading */}
+                <h1 className="text-5xl font-inter-display font-medium leading-44 tracking-tight text-center text-neutral-charcoal">
+                  Complete KYC & Address
+                </h1>
 
-                  {/* Description Text */}
-                  <p className="text-text-secondary text-base font-inter font-normal leading-6 text-center max-w-[500px]">
-                    Legally we are required KYC before a consultation for proper
-                    prescription
-                  </p>
-
+                {/* Description Text */}
+                <p className="text-text-secondary text-base font-inter font-normal leading-6 text-center max-w-[500px]">
+                  Legally we are required KYC before a consultation for proper
+                  prescription
+                </p>
 
                 {/* Step 1: KYC Upload Section */}
                 {currentStep === "kyc" && (
@@ -163,7 +186,7 @@ export default function KYC() {
                     <h2 className="text-text-primary text-lg font-inter font-semibold leading-6 text-center w-full">
                       Upload Document
                     </h2>
-                    
+
                     {/* Upload Options */}
                     <div className="flex flex-row gap-3 items-center w-full">
                       {/* Driver's License Option */}
@@ -253,16 +276,24 @@ export default function KYC() {
                           : "border-border-medium hover:border-brand-cyan-dark/50 hover:bg-neutral-light-gray/30"
                       }`}
                     >
-                      <div className={`flex items-center justify-center p-3 rounded-full ${
-                        isDragging ? "bg-brand-cyan-dark" : "bg-brand-cyan-pale"
-                      }`}>
-                        <Upload className={`w-6 h-6 ${
-                          isDragging ? "text-white" : "text-brand-cyan-dark"
-                        }`} />
+                      <div
+                        className={`flex items-center justify-center p-3 rounded-full ${
+                          isDragging
+                            ? "bg-brand-cyan-dark"
+                            : "bg-brand-cyan-pale"
+                        }`}
+                      >
+                        <Upload
+                          className={`w-6 h-6 ${
+                            isDragging ? "text-white" : "text-brand-cyan-dark"
+                          }`}
+                        />
                       </div>
                       <div className="flex flex-col gap-2 items-center">
                         <p className="text-text-primary text-base font-inter font-semibold">
-                          {isDragging ? "Drop your files here" : "Drag and drop your document here"}
+                          {isDragging
+                            ? "Drop your files here"
+                            : "Drag and drop your document here"}
                         </p>
                         <p className="text-text-secondary text-sm font-inter">
                           or click to browse

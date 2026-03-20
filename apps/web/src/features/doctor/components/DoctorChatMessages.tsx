@@ -41,9 +41,7 @@ export function DoctorChatMessages({
                 {message.type === "ai" ? (
                   <AIMessage
                     text={message.text}
-                    sender={
-                      message.sender || "Sniffles Health Assistant"
-                    }
+                    sender={message.sender || "Sniffles Health Assistant"}
                     linkText={message.linkText}
                     linkUrl={message.linkUrl}
                   />
@@ -53,11 +51,13 @@ export function DoctorChatMessages({
               </div>
             );
           })}
-          {isWaitingForAnswer && messages.length > 0 && messages[messages.length - 1]?.type === "user" && (
-            <div className="w-full">
-              <TypingIndicator sender="Sniffles Health Assistant" />
-            </div>
-          )}
+          {isWaitingForAnswer &&
+            messages.length > 0 &&
+            messages[messages.length - 1]?.type === "user" && (
+              <div className="w-full">
+                <TypingIndicator sender="Sniffles Health Assistant" />
+              </div>
+            )}
           <div ref={messagesEndRef} />
         </div>
       </div>

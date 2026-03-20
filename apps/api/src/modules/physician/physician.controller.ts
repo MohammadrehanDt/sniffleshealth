@@ -7,10 +7,10 @@ import { RolesGuard } from "../auth/guards/roles.guard";
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class PhysicianController {
   @Get("dashboard")
-  @Roles("doctor")
+  @Roles("DOCTOR")
   getDashboard() {
     return {
-      role: "doctor",
+      role: "DOCTOR",
       message: "Physician access granted",
     };
   }

@@ -6,5 +6,11 @@ type PageShellProps = PropsWithChildren<{
 }>;
 
 export function PageShell({ className, children }: PageShellProps) {
-  return <div className={cn("min-h-screen bg-background text-foreground", className)}>{children}</div>;
+  return (
+    <div
+      className={cn("min-h-screen bg-background text-foreground", className)}
+    >
+      {children}
+    </div>
+  );
 }

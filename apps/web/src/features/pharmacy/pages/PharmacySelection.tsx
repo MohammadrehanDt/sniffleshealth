@@ -40,8 +40,15 @@ const MOCK_PHARMACIES: Pharmacy[] = [
 
 export default function PharmacySelection() {
   const navigate = useNavigate();
-  const { selectedPharmacy, prescriptionItems, setSelectedPharmacy, setPharmacyAsDefault, setOrder } = usePharmacyStore();
-  const [localSelectedPharmacy, setLocalSelectedPharmacy] = useState<Pharmacy | null>(selectedPharmacy || MOCK_PHARMACIES[0]);
+  const {
+    selectedPharmacy,
+    prescriptionItems,
+    setSelectedPharmacy,
+    setPharmacyAsDefault,
+    setOrder,
+  } = usePharmacyStore();
+  const [localSelectedPharmacy, setLocalSelectedPharmacy] =
+    useState<Pharmacy | null>(selectedPharmacy || MOCK_PHARMACIES[0]);
   const [setAsDefault, setSetAsDefault] = useState(false);
 
   const handlePharmacySelect = (pharmacy: Pharmacy) => {
@@ -69,7 +76,7 @@ export default function PharmacySelection() {
   };
 
   return (
-      <div className="min-h-screen bg-neutral-off-white flex flex-col">
+    <div className="min-h-screen bg-neutral-off-white flex flex-col">
       <PageHeader
         backTo={ROUTES.PRESCRIPTION}
         step="#ISDS3434"
@@ -148,7 +155,7 @@ export default function PharmacySelection() {
 
                     {/* Other Pharmacy Cards */}
                     {MOCK_PHARMACIES.filter(
-                      (p) => p.id !== localSelectedPharmacy?.id
+                      (p) => p.id !== localSelectedPharmacy?.id,
                     ).map((pharmacy) => (
                       <div
                         key={pharmacy.id}
@@ -214,7 +221,9 @@ export default function PharmacySelection() {
                           </p>
                           <div className="flex items-center justify-end gap-1 text-center">
                             <Pill className="w-6 h-6 text-neutral-stone" />
-                            <span className="text-neutral-darker-gray text-[10px]">x</span>
+                            <span className="text-neutral-darker-gray text-[10px]">
+                              x
+                            </span>
                             <p className="text-neutral-stone text-sm font-inter font-normal">
                               {item.quantity}
                             </p>
@@ -240,7 +249,9 @@ export default function PharmacySelection() {
                           </p>
                           <div className="flex items-center justify-end gap-1 text-center">
                             <Pill className="w-6 h-6 text-neutral-stone" />
-                            <span className="text-neutral-darker-gray text-[10px]">x</span>
+                            <span className="text-neutral-darker-gray text-[10px]">
+                              x
+                            </span>
                             <p className="text-neutral-stone text-sm font-inter font-normal">
                               {item.quantity}
                             </p>
@@ -259,4 +270,3 @@ export default function PharmacySelection() {
     </div>
   );
 }
-

@@ -1,6 +1,5 @@
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { FONTS } from "@/constants";
 import type { ReactNode } from "react";
 
 export interface FormFieldProps {
@@ -11,6 +10,7 @@ export interface FormFieldProps {
   children: ReactNode;
   className?: string;
   labelClassName?: string;
+  labelAction?: ReactNode;
 }
 
 /**
@@ -25,19 +25,24 @@ export function FormField({
   children,
   className,
   labelClassName,
+  labelAction,
 }: FormFieldProps) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {label && (
-        <Label
-          className={cn(
-            "text-text-dark text-sm font-inter font-medium",
-            required && "after:content-['*'] after:ml-1 after:text-destructive",
-            labelClassName,
-          )}
-        >
-          {label}
-        </Label>
+        <div className="flex items-center justify-between gap-3">
+          <Label
+            className={cn(
+              "text-[#2F4246] text-sm font-inter font-medium",
+              required &&
+                "after:content-['*'] after:ml-1 after:text-destructive",
+              labelClassName,
+            )}
+          >
+            {label}
+          </Label>
+          {labelAction}
+        </div>
       )}
       {children}
       {hint && !error && (

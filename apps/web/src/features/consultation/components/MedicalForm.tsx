@@ -1,5 +1,4 @@
 import type { MedicalData } from "@sniffles/types";
-import { FONTS } from "@/constants";
 import { cn } from "@/lib/utils";
 
 export interface MedicalFormProps {
@@ -102,9 +101,7 @@ function DataField({ label, value, showLabel = true }: DataFieldProps) {
         </span>
       )}
       <div className="bg-warm-50 rounded-lg px-2 py-1">
-        <span className="text-text-primary text-base font-inter">
-          {value}
-        </span>
+        <span className="text-text-primary text-base font-inter">{value}</span>
       </div>
     </div>
   );

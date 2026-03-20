@@ -3,7 +3,11 @@
  * Displays animated dots to indicate the AI is processing/typing
  */
 
-export function TypingIndicator({ sender = "Sniffles Health Assistant" }: { sender?: string }) {
+export function TypingIndicator({
+  sender = "Sniffles Health Assistant",
+}: {
+  sender?: string;
+}) {
   return (
     <div className="flex items-start gap-3 animate-fade-in-slide-up">
       <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-2 bg-brand-cyan-light">
@@ -26,9 +30,18 @@ export function TypingIndicator({ sender = "Sniffles Health Assistant" }: { send
         </span>
         <div className="bg-brand-cyan-lighter rounded-bl-3xl rounded-br-3xl rounded-tl-xl rounded-tr-3xl px-4 py-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce" style={{ animationDelay: '0ms' }}></div>
-            <div className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce" style={{ animationDelay: '150ms' }}></div>
-            <div className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            <div
+              className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce"
+              style={{ animationDelay: "0ms" }}
+            ></div>
+            <div
+              className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce"
+              style={{ animationDelay: "150ms" }}
+            ></div>
+            <div
+              className="w-2 h-2 rounded-full bg-brand-cyan-dark animate-bounce"
+              style={{ animationDelay: "300ms" }}
+            ></div>
           </div>
         </div>
       </div>

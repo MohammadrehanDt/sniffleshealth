@@ -5,7 +5,6 @@
 
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FONTS, ROUTES } from "@/constants";
 import { Logo } from "./Logo";
 
 interface PageHeaderProps {

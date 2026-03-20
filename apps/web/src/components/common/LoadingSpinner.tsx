@@ -22,19 +22,16 @@ export function LoadingSpinner({
   text,
 }: LoadingSpinnerProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-2", className)}>
-      <Loader2
-        className={cn(
-          "text-brand-cyan animate-spin",
-          sizeClasses[size]
-        )}
-      />
-      {text && (
-        <p className="text-text-light text-sm font-inter">
-          {text}
-        </p>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-2",
+        className,
       )}
+    >
+      <Loader2
+        className={cn("text-brand-cyan animate-spin", sizeClasses[size])}
+      />
+      {text && <p className="text-text-light text-sm font-inter">{text}</p>}
     </div>
   );
 }
-
