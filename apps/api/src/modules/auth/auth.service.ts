@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   UnauthorizedException,
+  Inject,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@prisma/client";
@@ -15,6 +16,7 @@ import type {
 import { PrismaService } from "../../prisma/prisma.service";
 import type { CompleteSignupDto } from "./dto/complete-signup.dto";
 import type { LoginDto } from "./dto/login.dto";
+import type { RegisterDto } from "./dto/register.dto";
 import type { RequestOtpDto } from "./dto/request-otp.dto";
 import type { VerifyOtpDto } from "./dto/verify-otp.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
@@ -23,10 +25,36 @@ const OTP_TTL_MINUTES = 10;
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  @Inject(PrismaService)
+  private readonly prisma!: PrismaService;
+
+  @Inject(JwtService)
+  private readonly jwtService!: JwtService;
+
+  async register(dto: RegisterDto): Promise<AuthResponse> {
+    const email = this.normalizeEmail(dto.email);
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException("Email already exists");
+    }
+
+    const passwordHash = await hash(dto.password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        fullName: dto.fullName,
+        role: dto.role as UserRole,
+        emailVerifiedAt: new Date(),
+      },
+    });
+
+    return this.issueToken(user);
+  }
 
   async requestOtp(dto: RequestOtpDto): Promise<OtpChallengeResponse> {
     const email = this.normalizeEmail(dto.email);
@@ -45,12 +73,14 @@ export class AuthService {
       where: { email },
       update: {
         role: existingUser?.role ?? (dto.role as UserRole),
+        fullName: dto.fullName ?? existingUser?.fullName ?? null,
         otpCode,
         otpExpiresAt,
       },
       create: {
         email,
         role: dto.role as UserRole,
+        fullName: dto.fullName ?? null,
         otpCode,
         otpExpiresAt,
       },
@@ -163,6 +193,7 @@ export class AuthService {
     id: string;
     email: string;
     role: UserRole;
+    fullName: string | null;
     emailVerifiedAt: Date | null;
   }): Promise<AuthResponse> {
     const payload: JwtPayload = {
@@ -183,12 +214,14 @@ export class AuthService {
     id: string;
     email: string;
     role: UserRole;
+    fullName: string | null;
     emailVerifiedAt: Date | null;
   }): AuthUser {
     return {
       id: user.id,
       email: user.email,
       role: user.role,
+      fullName: user.fullName,
       emailVerified: Boolean(user.emailVerifiedAt),
     };
   }

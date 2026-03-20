@@ -21,7 +21,7 @@ export default function DoctorDashboardPage() {
   const { user, clearSession } = useAuthStore();
 
   return (
-    <AppShell role="DOCTOR">
+    <AppShell role="doctor">
       <AppHeader
         title="Physician Dashboard"
         description="Role-based shell for clinical review workflows. The full consultation review and prescription tools land in later phases."

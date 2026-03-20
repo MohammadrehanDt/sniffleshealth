@@ -16,7 +16,7 @@ export function AppSidebar({ role }: AppSidebarProps) {
       <div className="border-b border-border/70 px-6 py-6">
         <Logo size="md" />
         <p className="mt-4 text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-          {role === "DOCTOR" ? "Physician Workspace" : "Patient Workspace"}
+          {role === "doctor" ? "Physician Workspace" : "Patient Workspace"}
         </p>
       </div>
 

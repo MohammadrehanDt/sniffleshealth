@@ -8,13 +8,14 @@ datasource db {
 }
 
 enum UserRole {
-  PATIENT
-  DOCTOR
+  patient
+  doctor
 }
 
 model User {
   id              String    @id @default(cuid())
   email           String    @unique
+  fullName        String?
   role            UserRole
   passwordHash    String?
   otpCode         String?

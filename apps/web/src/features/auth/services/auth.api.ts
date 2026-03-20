@@ -4,6 +4,7 @@ import type {
   CompleteSignupPayload,
   LoginPayload,
   OtpChallengeResponse,
+  RegisterPayload,
   RequestOtpPayload,
   VerifyOtpResponse,
   VerifyOtpPayload,
@@ -11,6 +12,13 @@ import type {
 import { apiRequest } from "@/lib/api";
 
 export const authApi = {
+  register(payload: RegisterPayload) {
+    return apiRequest<AuthResponse>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
   requestOtp(payload: RequestOtpPayload) {
     return apiRequest<OtpChallengeResponse>("/auth/request-otp", {
       method: "POST",
