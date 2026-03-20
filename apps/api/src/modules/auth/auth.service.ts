@@ -133,6 +133,10 @@ export class AuthService {
   async login(dto: LoginDto): Promise<AuthResponse> {
     const user = await this.requireUser(dto.email);
 
+    if (user.role !== (dto.role as UserRole)) {
+      throw new UnauthorizedException("Invalid email or password");
+    }
+
     if (!user.passwordHash) {
       throw new UnauthorizedException("Account setup is incomplete");
     }
