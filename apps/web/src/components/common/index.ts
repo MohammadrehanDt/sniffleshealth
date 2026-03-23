@@ -13,3 +13,5 @@ export type { FormFieldProps } from "./FormField";
 
 export { DataField } from "./DataField";
 export { Tag } from "./Tag";
+export { SearchInput } from "./SearchInput";
+export type { SearchInputProps } from "./SearchInput";

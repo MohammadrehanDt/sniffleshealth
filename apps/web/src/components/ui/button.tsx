@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         brand:
-          "bg-[#146D75] text-[#E8F4F5] hover:bg-[#0e5157] transition-all active:scale-[0.98]",
+          "bg-brand-600 text-white hover:bg-brand-700 border border-brand-600 hover:border-brand-700",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -20,9 +20,6 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Brand variants using design system tokens
-        brand:
-          "bg-brand-600 text-white hover:bg-brand-700 border border-brand-600 hover:border-brand-700",
         "brand-outline":
           "border border-brand-600 text-brand-600 bg-transparent hover:bg-brand-100",
         "brand-soft":
