@@ -15,30 +15,42 @@ export const authKeys = {
   me: ["auth", "me"] as const,
 };
 
-export function useCurrentUser() {
-  const token = useAuthStore((s) => s.token);
+const SESSION_FLAG = "sniffles_session";
 
+export function setSessionFlag() {
+  localStorage.setItem(SESSION_FLAG, "1");
+}
+
+export function clearSessionFlag() {
+  localStorage.removeItem(SESSION_FLAG);
+}
+
+export function hasSession() {
+  return localStorage.getItem(SESSION_FLAG) === "1";
+}
+
+export function useCurrentUser() {
   return useQuery({
     queryKey: authKeys.me,
     queryFn: () => authApi.me(),
-    enabled: !!token,
+    enabled: hasSession(),
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
 }
 
-export function useLogin(options?: {
-  redirectTo?: string | null;
-  rememberSession?: boolean;
-}) {
-  const setSession = useAuthStore((s) => s.setSession);
+export function useLogin(options?: { redirectTo?: string | null }) {
+  const setUser = useAuthStore((s) => s.setUser);
+  const setBootstrapped = useAuthStore((s) => s.setBootstrapped);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
     onSuccess: (data) => {
-      setSession(data, options?.rememberSession);
+      setSessionFlag();
+      setUser(data.user);
+      setBootstrapped(true);
       queryClient.setQueryData(authKeys.me, data.user);
       const target =
         options?.redirectTo ?? getDefaultRouteForRole(data.user.role);
@@ -48,14 +60,17 @@ export function useLogin(options?: {
 }
 
 export function useRegister() {
-  const setSession = useAuthStore((s) => s.setSession);
+  const setUser = useAuthStore((s) => s.setUser);
+  const setBootstrapped = useAuthStore((s) => s.setBootstrapped);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: (data) => {
-      setSession(data);
+      setSessionFlag();
+      setUser(data.user);
+      setBootstrapped(true);
       queryClient.setQueryData(authKeys.me, data.user);
       navigate(getDefaultRouteForRole(data.user.role), { replace: true });
     },
@@ -75,7 +90,8 @@ export function useVerifyOtp() {
 }
 
 export function useCompleteSignup() {
-  const setSession = useAuthStore((s) => s.setSession);
+  const setUser = useAuthStore((s) => s.setUser);
+  const setBootstrapped = useAuthStore((s) => s.setBootstrapped);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -83,7 +99,9 @@ export function useCompleteSignup() {
     mutationFn: (payload: CompleteSignupPayload) =>
       authApi.completeSignup(payload),
     onSuccess: (data) => {
-      setSession(data);
+      setSessionFlag();
+      setUser(data.user);
+      setBootstrapped(true);
       queryClient.setQueryData(authKeys.me, data.user);
       navigate(getDefaultRouteForRole(data.user.role), { replace: true });
     },
@@ -95,9 +113,14 @@ export function useLogout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return () => {
-    clearSession();
-    queryClient.removeQueries({ queryKey: authKeys.me });
-    navigate("/login", { replace: true });
+  return async () => {
+    try {
+      await authApi.logout();
+    } finally {
+      clearSessionFlag();
+      clearSession();
+      queryClient.removeQueries({ queryKey: authKeys.me });
+      navigate("/login", { replace: true });
+    }
   };
 }

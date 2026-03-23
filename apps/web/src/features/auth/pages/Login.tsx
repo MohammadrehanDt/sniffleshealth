@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { ROUTES } from "@/constants";
 import { useLogin } from "../hooks/useAuth";
 import { loginSchema, type LoginFormValues } from "../schemas/auth.schema";
@@ -11,16 +12,15 @@ import { toast } from "@/components/ui/use-toast";
 import { FormField } from "@/components/common/FormField";
 import { AuthPageShell } from "../components/AuthPageShell";
 import { AuthPasswordField } from "../components/AuthPasswordField";
-import { useState } from "react";
 
 export default function LoginPage() {
   const location = useLocation();
-  const [rememberSession, setRememberSession] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const redirectTo =
     typeof location.state?.from === "string" ? location.state.from : null;
 
-  const loginMutation = useLogin({ redirectTo, rememberSession });
+  const loginMutation = useLogin({ redirectTo });
 
   const {
     register,
@@ -40,6 +40,7 @@ export default function LoginPage() {
       {
         email: data.email.trim().toLowerCase(),
         password: data.password,
+        rememberMe,
       },
       {
         onError: (err) => {
@@ -90,15 +91,13 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-between gap-3">
           <label
-            htmlFor="remember-session"
+            htmlFor="remember-me"
             className="flex cursor-pointer items-center gap-2 text-[13px] text-[#4D4D4D]"
           >
             <Checkbox
-              id="remember-session"
-              checked={rememberSession}
-              onCheckedChange={(checked) =>
-                setRememberSession(checked === true)
-              }
+              id="remember-me"
+              checked={rememberMe}
+              onCheckedChange={(checked) => setRememberMe(checked === true)}
               className="h-4 w-4 rounded-[4px] border-[#C8D2D5] data-[state=checked]:border-[#1B6E75] data-[state=checked]:bg-[#1B6E75]"
             />
             <span className="text-[#1B2B2E] font-medium">Remember me</span>

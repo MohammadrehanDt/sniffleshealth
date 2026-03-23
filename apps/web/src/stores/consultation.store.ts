@@ -8,7 +8,6 @@ import type {
   ConsultationState,
   HealthCategory,
   MedicalData,
-  Symptom,
 } from "@sniffles/types";
 
 interface ConsultationStore extends ConsultationState {

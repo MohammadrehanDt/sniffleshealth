@@ -36,21 +36,15 @@ export interface RegisterPayload {
 export interface LoginPayload {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
   user: AuthUser;
 }
 
-export interface RefreshTokenPayload {
-  refreshToken: string;
-}
-
 export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
+  success: boolean;
 }
 
 export interface OtpChallengeResponse {

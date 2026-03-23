@@ -14,6 +14,7 @@ import {
   LoginPage,
   SignupPage,
 } from "@/features/auth/pages";
+import { RootLayout } from "@/components/layout/RootLayout";
 import Index from "./pages/Index";
 import {
   Symptoms,
@@ -91,22 +92,31 @@ export default function App() {
               path={ROUTES.PHARMACY_CONFIRMATION}
               element={<PharmacyConfirmation />}
             />
+            {/* Authenticated layout — shared sidebar, header, footer */}
             <Route
-              path={ROUTES.DASHBOARD}
               element={
-                <ProtectedRoute roles={["PATIENT"]}>
-                  <Dashboard />
+                <ProtectedRoute>
+                  <RootLayout />
                 </ProtectedRoute>
               }
-            />
-            <Route
-              path={ROUTES.DOCTOR_DASHBOARD}
-              element={
-                <ProtectedRoute roles={["DOCTOR"]}>
-                  <DoctorDashboardPage />
-                </ProtectedRoute>
-              }
-            />
+            >
+              <Route
+                path={ROUTES.DASHBOARD}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DOCTOR_DASHBOARD}
+                element={
+                  <ProtectedRoute roles={["DOCTOR"]}>
+                    <DoctorDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

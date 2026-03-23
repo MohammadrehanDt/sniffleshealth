@@ -4,8 +4,6 @@ import type {
   CompleteSignupPayload,
   LoginPayload,
   OtpChallengeResponse,
-  RefreshTokenPayload,
-  RefreshTokenResponse,
   RegisterPayload,
   RequestOtpPayload,
   VerifyOtpResponse,
@@ -35,10 +33,9 @@ export const authApi = {
   login: (payload: LoginPayload) =>
     api.post<AuthResponse>("/auth/login", payload).then((r) => r.data),
 
-  refresh: (payload: RefreshTokenPayload) =>
-    api
-      .post<RefreshTokenResponse>("/auth/refresh", payload)
-      .then((r) => r.data),
+  refresh: () => api.post("/auth/refresh").then((r) => r.data),
+
+  logout: () => api.post("/auth/logout").then((r) => r.data),
 
   me: () => api.get<AuthUser>("/auth/me").then((r) => r.data),
 };

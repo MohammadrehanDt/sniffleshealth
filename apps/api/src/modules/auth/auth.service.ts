@@ -8,12 +8,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
-import type {
-  AuthResponse,
-  AuthUser,
-  OtpChallengeResponse,
-  RefreshTokenResponse,
-} from "@sniffles/types";
+import type { AuthUser, OtpChallengeResponse } from "@sniffles/types";
 import { PrismaService } from "../../prisma/prisma.service";
 import type { CompleteSignupDto } from "./dto/complete-signup.dto";
 import type { LoginDto } from "./dto/login.dto";
@@ -21,6 +16,17 @@ import type { RegisterDto } from "./dto/register.dto";
 import type { RequestOtpDto } from "./dto/request-otp.dto";
 import type { VerifyOtpDto } from "./dto/verify-otp.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
+
+export interface InternalAuthResult {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
+}
+
+export interface InternalTokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
 
 const OTP_TTL_MINUTES = 10;
 
@@ -32,7 +38,7 @@ export class AuthService {
   @Inject(JwtService)
   private readonly jwtService!: JwtService;
 
-  async register(dto: RegisterDto): Promise<AuthResponse> {
+  async register(dto: RegisterDto): Promise<InternalAuthResult> {
     const email = this.normalizeEmail(dto.email);
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -107,7 +113,7 @@ export class AuthService {
     };
   }
 
-  async completeSignup(dto: CompleteSignupDto): Promise<AuthResponse> {
+  async completeSignup(dto: CompleteSignupDto): Promise<InternalAuthResult> {
     const user = await this.requireUser(dto.email);
 
     if (user.passwordHash && user.emailVerifiedAt) {
@@ -131,7 +137,7 @@ export class AuthService {
     return this.issueToken(updatedUser);
   }
 
-  async login(dto: LoginDto): Promise<AuthResponse> {
+  async login(dto: LoginDto): Promise<InternalAuthResult> {
     const user = await this.requireUser(dto.email);
 
     if (!user.passwordHash) {
@@ -150,7 +156,7 @@ export class AuthService {
     return this.issueToken(user);
   }
 
-  async refresh(refreshToken: string): Promise<RefreshTokenResponse> {
+  async refresh(refreshToken: string): Promise<InternalTokenPair> {
     try {
       const payload = await this.jwtService.verifyAsync<
         JwtPayload & { type?: string }
@@ -226,7 +232,7 @@ export class AuthService {
     role: UserRole;
     fullName: string | null;
     emailVerifiedAt: Date | null;
-  }): Promise<AuthResponse> {
+  }): Promise<InternalAuthResult> {
     const basePayload: JwtPayload = {
       sub: user.id,
       email: user.email,
@@ -245,7 +251,7 @@ export class AuthService {
 
   private async generateTokenPair(
     payload: JwtPayload,
-  ): Promise<RefreshTokenResponse> {
+  ): Promise<InternalTokenPair> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { ...payload, type: "access" },
