@@ -6,9 +6,10 @@
 interface LogoProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  src?: string;
 }
 
-export function Logo({ size = "md", className = "" }: LogoProps) {
+export function Logo({ size = "md", className = "" ,src="/images/logo.png"}: LogoProps) {
   const sizes = {
     sm: { width: "80", height: "28" },
     md: { width: "96", height: "33" },
@@ -20,7 +21,7 @@ export function Logo({ size = "md", className = "" }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
       <img
-        src="/images/logo.png"
+        src={src}
         alt="Sniffles Health"
         width={currentSize.width}
         height={currentSize.height}

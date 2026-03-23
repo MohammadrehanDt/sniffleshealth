@@ -15,7 +15,7 @@ import {
   SignupPage,
 } from "@/features/auth/pages";
 import { RootLayout } from "@/components/layout/RootLayout";
-import Index from "./pages/Index";
+import LandingPage from "@/features/landing/pages/LandingPage";
 import {
   Symptoms,
   MedicalProfile,
@@ -46,7 +46,7 @@ export default function App() {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path={ROUTES.HOME} element={<Index />} />
+            <Route path={ROUTES.HOME} element={<LandingPage />} />
             <Route
               path={ROUTES.LOGIN}
               element={
