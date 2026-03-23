@@ -1,26 +1,19 @@
 import { useEffect, useRef } from "react";
-import { useCurrentUser } from "../hooks/useAuth";
+import { useCurrentUser, clearSessionFlag } from "../hooks/useAuth";
 import { useAuthStore } from "@/stores/auth.store";
 
 export function AuthBootstrap() {
   const didRunRef = useRef(false);
-  const {
-    token,
-    setUser,
-    clearSession,
-    setBootstrapped,
-    isBootstrapped,
-    hasHydrated,
-  } = useAuthStore();
+  const { setUser, clearSession, setBootstrapped, isBootstrapped } =
+    useAuthStore();
 
-  const { data, error, isFetched } = useCurrentUser();
+  const { data, error, isFetched, fetchStatus } = useCurrentUser();
 
   useEffect(() => {
-    if (!hasHydrated || didRunRef.current || isBootstrapped) {
-      return;
-    }
+    if (didRunRef.current || isBootstrapped) return;
 
-    if (!token) {
+    // Query disabled (no session flag) — user is a guest
+    if (fetchStatus === "idle" && !isFetched) {
       didRunRef.current = true;
       setBootstrapped(true);
       return;
@@ -31,23 +24,14 @@ export function AuthBootstrap() {
     didRunRef.current = true;
 
     if (error) {
+      clearSessionFlag();
       clearSession();
     } else if (data) {
       setUser(data);
     }
 
     setBootstrapped(true);
-  }, [
-    clearSession,
-    data,
-    error,
-    hasHydrated,
-    isBootstrapped,
-    isFetched,
-    setBootstrapped,
-    setUser,
-    token,
-  ]);
+  }, [clearSession, data, error, fetchStatus, isBootstrapped, isFetched, setBootstrapped, setUser]);
 
   return null;
 }

@@ -1,14 +1,11 @@
+import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
-
-export function RootLayout({ children }: RootLayoutProps) {
+export function RootLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -28,7 +25,7 @@ export function RootLayout({ children }: RootLayoutProps) {
             </div>
           </header>
           <main className="flex-1 overflow-auto p-4 md:p-6">
-            {children}
+            <Outlet />
           </main>
         </div>
       </div>

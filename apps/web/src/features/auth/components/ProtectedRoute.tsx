@@ -10,9 +10,9 @@ type ProtectedRouteProps = PropsWithChildren<{
 
 export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   const location = useLocation();
-  const { hasHydrated, isBootstrapped, token, user } = useAuthStore();
+  const { isBootstrapped, user } = useAuthStore();
 
-  if (!hasHydrated || !isBootstrapped) {
+  if (!isBootstrapped) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-bg-default text-text-secondary">
         Checking session...
@@ -20,7 +20,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
     );
   }
 
-  if (!token || !user) {
+  if (!user) {
     return (
       <Navigate to={ROUTES.LOGIN} replace state={{ from: location.pathname }} />
     );

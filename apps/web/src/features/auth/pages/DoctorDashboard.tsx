@@ -1,5 +1,4 @@
 import { ClipboardList, ShieldCheck } from "lucide-react";
-import { AppHeader, AppShell, PageWrapper } from "@/components/app-shell";
 import {
   Card,
   CardContent,
@@ -9,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { useAuthStore } from "@/stores/auth.store";
 
 const physicianQueue = [
   {
@@ -22,24 +20,24 @@ const physicianQueue = [
 ];
 
 export default function DoctorDashboardPage() {
-  const { user, clearSession } = useAuthStore();
-
   return (
-    <AppShell role="DOCTOR">
-      <AppHeader
-        title="Physician Dashboard"
-        description="Role-based shell for clinical review workflows. The full consultation review and prescription tools land in later phases."
-        userLabel={user?.email}
-        actions={
-          <Button>
-            <ClipboardList className="h-4 w-4" />
-            Review queue
-          </Button>
-        }
-        onLogout={clearSession}
-      />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+            Physician Dashboard
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Role-based shell for clinical review workflows.
+          </p>
+        </div>
+        <Button>
+          <ClipboardList className="h-4 w-4" />
+          Review queue
+        </Button>
+      </div>
 
-      <PageWrapper className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <Card className="rounded-3xl border-white/70 shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Review queue</CardTitle>
@@ -58,16 +56,7 @@ export default function DoctorDashboardPage() {
                   <p className="font-medium text-foreground">{item.patient}</p>
                   <p className="text-sm text-muted-foreground">{item.issue}</p>
                 </div>
-                <StatusBadge
-                  label={item.status}
-                  tone={
-                    item.status === "Attention"
-                      ? "attention"
-                      : item.status === "Scheduled"
-                        ? "scheduled"
-                        : "pending"
-                  }
-                />
+                <StatusBadge status={item.status} />
               </div>
             ))}
           </CardContent>
@@ -100,7 +89,7 @@ export default function DoctorDashboardPage() {
             </div>
           </CardContent>
         </Card>
-      </PageWrapper>
-    </AppShell>
+      </div>
+    </div>
   );
 }
