@@ -1,6 +1,6 @@
 import type { AuthResponse, AuthUser } from "@sniffles/types";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 const AUTH_STORAGE_KEY = "sniffles-auth";
 
@@ -14,39 +14,6 @@ function getBrowserStorage() {
     session: window.sessionStorage,
   };
 }
-
-const authStorage = createJSONStorage(() => ({
-  getItem: (name) => {
-    const storage = getBrowserStorage();
-    if (!storage) {
-      return null;
-    }
-
-    return storage.local.getItem(name) ?? storage.session.getItem(name);
-  },
-  setItem: (name, value) => {
-    const storage = getBrowserStorage();
-    if (!storage) {
-      return;
-    }
-
-    const shouldRemember = JSON.parse(value).state?.rememberSession === true;
-    const target = shouldRemember ? storage.local : storage.session;
-    const other = shouldRemember ? storage.session : storage.local;
-
-    other.removeItem(name);
-    target.setItem(name, value);
-  },
-  removeItem: (name) => {
-    const storage = getBrowserStorage();
-    if (!storage) {
-      return;
-    }
-
-    storage.local.removeItem(name);
-    storage.session.removeItem(name);
-  },
-}));
 
 interface AuthState {
   token: string | null;
@@ -62,6 +29,72 @@ interface AuthState {
   setHasHydrated: (value: boolean) => void;
   clearSession: () => void;
 }
+
+function hasCoherentPersistedSession(state: Partial<AuthState> | undefined) {
+  if (!state) {
+    return false;
+  }
+
+  const hasAnyAuthValue = !!(state.token || state.refreshToken || state.user);
+  if (!hasAnyAuthValue) {
+    return true;
+  }
+
+  return Boolean(state.token && state.refreshToken && state.user);
+}
+
+const authStorage = {
+  getItem: (name: string) => {
+    const storage = getBrowserStorage();
+    if (!storage) {
+      return null;
+    }
+
+    const rawValue = storage.local.getItem(name) ?? storage.session.getItem(name);
+    if (!rawValue) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(rawValue);
+    } catch {
+      storage.local.removeItem(name);
+      storage.session.removeItem(name);
+      return null;
+    }
+  },
+  setItem: (name: string, value: unknown) => {
+    const storage = getBrowserStorage();
+    if (!storage) {
+      return;
+    }
+
+    const serializedValue = JSON.stringify(value);
+    const shouldRemember =
+      typeof value === "object" &&
+      value !== null &&
+      "state" in value &&
+      typeof value.state === "object" &&
+      value.state !== null &&
+      "rememberSession" in value.state &&
+      value.state.rememberSession === true;
+
+    const target = shouldRemember ? storage.local : storage.session;
+    const other = shouldRemember ? storage.session : storage.local;
+
+    other.removeItem(name);
+    target.setItem(name, serializedValue);
+  },
+  removeItem: (name: string) => {
+    const storage = getBrowserStorage();
+    if (!storage) {
+      return;
+    }
+
+    storage.local.removeItem(name);
+    storage.session.removeItem(name);
+  },
+};
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -81,26 +114,13 @@ export const useAuthStore = create<AuthState>()(
           rememberSession,
         }),
       setTokens: (tokens) =>
-        set((state) => ({
+        set({
           token: tokens.accessToken,
           refreshToken: tokens.refreshToken,
-          rememberSession: state.rememberSession,
-        })),
-      setUser: (user) =>
-        set((state) => ({
-          ...state,
-          user,
-        })),
-      setBootstrapped: (value) =>
-        set((state) => ({
-          ...state,
-          isBootstrapped: value,
-        })),
-      setHasHydrated: (value) =>
-        set((state) => ({
-          ...state,
-          hasHydrated: value,
-        })),
+        }),
+      setUser: (user) => set({ user }),
+      setBootstrapped: (value) => set({ isBootstrapped: value }),
+      setHasHydrated: (value) => set({ hasHydrated: value }),
       clearSession: () =>
         set({
           token: null,
@@ -120,6 +140,10 @@ export const useAuthStore = create<AuthState>()(
         rememberSession: state.rememberSession,
       }),
       onRehydrateStorage: () => (state) => {
+        if (state && !hasCoherentPersistedSession(state)) {
+          state.clearSession();
+        }
+
         state?.setHasHydrated(true);
       },
     },
