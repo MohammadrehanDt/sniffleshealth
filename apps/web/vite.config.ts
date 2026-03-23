@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => {
       port: Number(env.WEB_PORT ?? 5173),
       proxy: {
         "/api": {
-          target: env.VITE_API_URL?.replace(/\/api$/, "") ?? "http://localhost:4000",
+          target:
+            env.VITE_API_URL?.replace(/\/api$/, "") ?? "http://localhost:4000",
           changeOrigin: true,
         },
       },

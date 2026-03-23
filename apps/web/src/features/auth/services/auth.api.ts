@@ -4,45 +4,41 @@ import type {
   CompleteSignupPayload,
   LoginPayload,
   OtpChallengeResponse,
+  RefreshTokenPayload,
+  RefreshTokenResponse,
+  RegisterPayload,
   RequestOtpPayload,
   VerifyOtpResponse,
   VerifyOtpPayload,
 } from "@sniffles/types";
-import { apiRequest } from "@/lib/api";
+import { api } from "@/lib/api";
 
 export const authApi = {
-  requestOtp(payload: RequestOtpPayload) {
-    return apiRequest<OtpChallengeResponse>("/auth/request-otp", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-  },
+  register: (payload: RegisterPayload) =>
+    api.post<AuthResponse>("/auth/register", payload).then((r) => r.data),
 
-  verifyOtp(payload: VerifyOtpPayload) {
-    return apiRequest<VerifyOtpResponse>("/auth/verify-otp", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-  },
+  requestOtp: (payload: RequestOtpPayload) =>
+    api
+      .post<OtpChallengeResponse>("/auth/request-otp", payload)
+      .then((r) => r.data),
 
-  completeSignup(payload: CompleteSignupPayload) {
-    return apiRequest<AuthResponse>("/auth/complete-signup", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-  },
+  verifyOtp: (payload: VerifyOtpPayload) =>
+    api
+      .post<VerifyOtpResponse>("/auth/verify-otp", payload)
+      .then((r) => r.data),
 
-  login(payload: LoginPayload) {
-    return apiRequest<AuthResponse>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-  },
+  completeSignup: (payload: CompleteSignupPayload) =>
+    api
+      .post<AuthResponse>("/auth/complete-signup", payload)
+      .then((r) => r.data),
 
-  me(token: string) {
-    return apiRequest<AuthUser>("/auth/me", {
-      method: "GET",
-      token,
-    });
-  },
+  login: (payload: LoginPayload) =>
+    api.post<AuthResponse>("/auth/login", payload).then((r) => r.data),
+
+  refresh: (payload: RefreshTokenPayload) =>
+    api
+      .post<RefreshTokenResponse>("/auth/refresh", payload)
+      .then((r) => r.data),
+
+  me: () => api.get<AuthUser>("/auth/me").then((r) => r.data),
 };

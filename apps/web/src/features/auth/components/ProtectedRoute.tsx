@@ -21,7 +21,9 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   }
 
   if (!token || !user) {
-    return <Navigate to={ROUTES.LOGIN} replace state={{ from: location.pathname }} />;
+    return (
+      <Navigate to={ROUTES.LOGIN} replace state={{ from: location.pathname }} />
+    );
   }
 
   if (roles?.length && !roles.includes(user.role)) {

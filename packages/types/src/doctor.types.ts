@@ -12,4 +12,3 @@ export interface Doctor {
   initials?: string; // For avatar display
   isConnected?: boolean;
 }
-

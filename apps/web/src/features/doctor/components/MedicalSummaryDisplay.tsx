@@ -78,44 +78,39 @@ export function MedicalSummaryDisplay({
         )}
 
       {/* Social History */}
-      {medicalData.socialHistory &&
-        medicalData.socialHistory.length > 0 && (
+      {medicalData.socialHistory && medicalData.socialHistory.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h3 className="text-text-primary text-base font-inter font-medium">
+            Social History
+          </h3>
+          <p className="text-neutral-dark-gray text-sm font-inter">
+            Including smoking, alcohol and illicit drug use
+          </p>
           <div className="flex flex-col gap-2">
-            <h3 className="text-text-primary text-base font-inter font-medium">
-              Social History
-            </h3>
-            <p className="text-neutral-dark-gray text-sm font-inter">
-              Including smoking, alcohol and illicit drug use
-            </p>
-            <div className="flex flex-col gap-2">
-              {medicalData.socialHistory.map((item, idx) => (
-                <Tag
-                  key={idx}
-                  text={`${item.type}: ${item.level}`}
-                />
-              ))}
-            </div>
+            {medicalData.socialHistory.map((item, idx) => (
+              <Tag key={idx} text={`${item.type}: ${item.level}`} />
+            ))}
           </div>
-        )}
+        </div>
+      )}
 
       {/* Family History */}
-      {medicalData.familyHistory &&
-        medicalData.familyHistory.length > 0 && (
+      {medicalData.familyHistory && medicalData.familyHistory.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h3 className="text-text-primary text-base font-inter font-medium">
+            Family History
+          </h3>
+          <p className="text-neutral-dark-gray text-sm font-inter">
+            Problems that run in a family like heart disease or other genetic
+            issues
+          </p>
           <div className="flex flex-col gap-2">
-            <h3 className="text-text-primary text-base font-inter font-medium">
-              Family History
-            </h3>
-            <p className="text-neutral-dark-gray text-sm font-inter">
-              Problems that run in a family like heart disease or other genetic
-              issues
-            </p>
-            <div className="flex flex-col gap-2">
-              {medicalData.familyHistory.map((item, idx) => (
-                <Tag key={idx} text={item} />
-              ))}
-            </div>
+            {medicalData.familyHistory.map((item, idx) => (
+              <Tag key={idx} text={item} />
+            ))}
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }

@@ -157,29 +157,32 @@ export default function Index() {
 
     const minLength = SEARCH_PREFIX.length;
 
-    const timeout = setTimeout(() => {
-      if (isDeletingSearchExample) {
-        // Delete down to the common prefix, then switch to typing next example
-        if (displayedSearchExample.length > minLength) {
-          setDisplayedSearchExample((prev) => prev.slice(0, -1));
+    const timeout = setTimeout(
+      () => {
+        if (isDeletingSearchExample) {
+          // Delete down to the common prefix, then switch to typing next example
+          if (displayedSearchExample.length > minLength) {
+            setDisplayedSearchExample((prev) => prev.slice(0, -1));
+          } else {
+            setIsDeletingSearchExample(false);
+            setSearchExampleIndex(nextIndex);
+          }
         } else {
-          setIsDeletingSearchExample(false);
-          setSearchExampleIndex(nextIndex);
+          // Typing phase for the next example
+          if (displayedSearchExample === nextFull) {
+            // When finished typing, wait a bit longer before starting to delete
+            setTimeout(() => {
+              setIsDeletingSearchExample(true);
+            }, 1800);
+          } else {
+            setDisplayedSearchExample((prev) =>
+              nextFull.slice(0, prev.length + 1),
+            );
+          }
         }
-      } else {
-        // Typing phase for the next example
-        if (displayedSearchExample === nextFull) {
-          // When finished typing, wait a bit longer before starting to delete
-          setTimeout(() => {
-            setIsDeletingSearchExample(true);
-          }, 1800);
-        } else {
-          setDisplayedSearchExample((prev) =>
-            nextFull.slice(0, prev.length + 1),
-          );
-        }
-      }
-    }, isDeletingSearchExample ? 40 : 70);
+      },
+      isDeletingSearchExample ? 40 : 70,
+    );
 
     return () => clearTimeout(timeout);
   }, [displayedSearchExample, isDeletingSearchExample, searchExampleIndex]);
@@ -290,21 +293,18 @@ export default function Index() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-inter-display font-medium  leading-tight tracking-display-tighter">
                 {/* <span className="text-neutral-charcoal">Get your </span> */}
                 <span className="text-brand-cyan-dark">Consultation</span>
-                <span className="text-neutral-charcoal"> in minutes,</span> <br></br>
+                <span className="text-neutral-charcoal"> in minutes,</span>{" "}
+                <br></br>
                 <span className="text-neutral-charcoal">
-                AI powered healthcare for everyone            
-              </span>
+                  AI powered healthcare for everyone
+                </span>
               </h1>
-              
-              
             </div>
 
             {/* Search Section */}
             <div className="w-full flex flex-col justify-center items-center gap-2">
               {/* Location & Search Bar */}
               <div className="w-full flex flex-col md:flex-row justify-center items-stretch gap-3">
-               
-
                 {/* Search Bar */}
                 {/* <div className="flex-1 flex items-center gap-2 bg-neutral-off-white rounded-4xl px-4 py-3">
                   <Search className="w-5 h-5 text-text-secondary opacity-75" />
@@ -424,19 +424,26 @@ export default function Index() {
                     HIPAA compliant
                   </span>
                 </div> */}
-                 {/* Location Selector */}
-                 <TooltipProvider>
-                  <Select value={selectedState} onValueChange={setSelectedState}>
+                {/* Location Selector */}
+                <TooltipProvider>
+                  <Select
+                    value={selectedState}
+                    onValueChange={setSelectedState}
+                  >
                     <SelectTrigger className="flex items-center gap-2 bg-neutral-off-white rounded-4xl px-4 py-3 h-auto border-none shadow-none focus:ring-0 focus:ring-offset-0 w-auto min-w-[160px]">
                       <MapPin className="w-6 h-6 text-text-secondary flex-shrink-0" />
                       <SelectValue className="text-text-dark font-inter-d font-semibold text-base">
-                        {US_STATES.find((s) => s.code === selectedState)?.name || "New York"}
+                        {US_STATES.find((s) => s.code === selectedState)
+                          ?.name || "New York"}
                       </SelectValue>
-                      <div className={`w-[9px] h-[9px] rounded-full flex-shrink-0 ${
-                        US_STATES.find((s) => s.code === selectedState)?.enabled
-                          ? "bg-semantic-green"
-                          : "bg-gray-400"
-                      }`}></div>
+                      <div
+                        className={`w-[9px] h-[9px] rounded-full flex-shrink-0 ${
+                          US_STATES.find((s) => s.code === selectedState)
+                            ?.enabled
+                            ? "bg-semantic-green"
+                            : "bg-gray-400"
+                        }`}
+                      ></div>
                       {/* <ChevronDown className="w-6 h-6 text-text-secondary flex-shrink-0" /> */}
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px] bg-white border-border-medium">
@@ -451,7 +458,9 @@ export default function Index() {
                                     e.preventDefault();
                                   }}
                                 >
-                                  <span className="text-left font-inter-display font-medium">{state.name}</span>
+                                  <span className="text-left font-inter-display font-medium">
+                                    {state.name}
+                                  </span>
                                 </div>
                               </TooltipTrigger>
                               <TooltipContent className="bg-neutral-charcoal text-white border-none">
@@ -467,7 +476,9 @@ export default function Index() {
                             className="cursor-pointer"
                           >
                             <div className="flex items-center justify-between w-full">
-                              <span className="text-left font-inter-display font-medium">{state.name}</span>
+                              <span className="text-left font-inter-display font-medium">
+                                {state.name}
+                              </span>
                               <div className="w-2 h-2 rounded-full bg-semantic-green ml-2"></div>
                             </div>
                           </SelectItem>
@@ -528,48 +539,46 @@ export default function Index() {
                   your state and get medical advice instantly, all from the
                   comfort of your home.
                 </p>
-              
               </div>
 
               {/* Right Feature Cards */}
-              
-                <div className="flex flex-row gap-5">
-                  <FeatureCard
-                    icon={<Stethoscope className="w-6 h-6 text-text-dark" />}
-                    title="Top licensed doctors"
-                    className="bg-brand-cyan-light"
-                  />
-                  <FeatureCard
-                    icon={<FileSignature className="w-6 h-6 text-text-dark" />}
-                    title="No Insurance Required"
-                    className="bg-brand-cyan-light"
-                  />
-                  <FeatureCard
-                    icon={<Clock className="w-6 h-6 text-text-dark" />}
-                    title="Instant, within 15 mins appointments"
-                    className="bg-brand-cyan-pale-blue"
-                  />
-                   <FeatureCard
-                    icon={<Lock className="w-6 h-6 text-text-dark" />}
-                    title="No hidden fees"
-                    className="bg-brand-cyan-pale-blue"
-                  />
-                   <FeatureCard
-                    icon={<FileSignature className="w-6 h-6 text-text-dark" />}
-                    title="Same day prescriptions"
-                    className="bg-brand-cyan-pale-blue"
-                  />
-                </div>
-                {/* <div className="hidden md:flex flex-col mt-0 md:mt-12  overflow-hidden"> */}
-                  {/* <div className="animate-feature-ticker">
+
+              <div className="flex flex-row gap-5">
+                <FeatureCard
+                  icon={<Stethoscope className="w-6 h-6 text-text-dark" />}
+                  title="Top licensed doctors"
+                  className="bg-brand-cyan-light"
+                />
+                <FeatureCard
+                  icon={<FileSignature className="w-6 h-6 text-text-dark" />}
+                  title="No Insurance Required"
+                  className="bg-brand-cyan-light"
+                />
+                <FeatureCard
+                  icon={<Clock className="w-6 h-6 text-text-dark" />}
+                  title="Instant, within 15 mins appointments"
+                  className="bg-brand-cyan-pale-blue"
+                />
+                <FeatureCard
+                  icon={<Lock className="w-6 h-6 text-text-dark" />}
+                  title="No hidden fees"
+                  className="bg-brand-cyan-pale-blue"
+                />
+                <FeatureCard
+                  icon={<FileSignature className="w-6 h-6 text-text-dark" />}
+                  title="Same day prescriptions"
+                  className="bg-brand-cyan-pale-blue"
+                />
+              </div>
+              {/* <div className="hidden md:flex flex-col mt-0 md:mt-12  overflow-hidden"> */}
+              {/* <div className="animate-feature-ticker">
                     <FeatureCard
                       icon={<FileSignature className="w-6 h-6 text-text-dark" />}
                       title={ROTATING_FEATURES[activeFeatureIndex].title}
                       className="bg-brand-cyan-pale-blue"
                     />
                   </div> */}
-                {/* </div> */}
-
+              {/* </div> */}
             </div>
           </div>
         </div>
@@ -580,7 +589,7 @@ export default function Index() {
         <div className=" mx-auto">
           <div className="bg-bg-dark rounded-3xl px-6 md:px-12 lg:px-20 py-12 md:py-20 relative overflow-hidden">
             <div className="relative z-10 flex flex-col gap-6 justify-center items-start">
-            <h2 className="text-cyan-50 text-xl md:text-xl lg:text-2xl px-8 text-center font-quincy font-regular">
+              <h2 className="text-cyan-50 text-xl md:text-xl lg:text-2xl px-8 text-center font-quincy font-regular">
                 Don't see your symptoms? Directly search for it
               </h2>
               <div className="w-full flex items-center gap-6 bg-brand-cyan/5 rounded-3xl border-2 border-white/10 px-6 py-6">
@@ -591,7 +600,6 @@ export default function Index() {
                   className="flex-1 bg-transparent border-none outline-none text-warm-300 text-2xl md:text-3xl lg:text-4xl font-inter-display font-regular placeholder:text-cyan-200 tracking-display-normal transition-opacity duration-150"
                 />
               </div>
-             
             </div>
           </div>
         </div>
@@ -655,8 +663,6 @@ export default function Index() {
                   <Smile className="w-10 h-10 text-cyan-800" />
                 </div>
               </div>
-
-          
             </div>
           </div>
         </div>
@@ -670,42 +676,37 @@ export default function Index() {
               {/* Left Side */}
               <div className="flex flex-col justify-center items-center gap-2">
                 <div className="flex flex-col flex-grow  w-full gap-2 text-center items-center justify-center">
-                <div className="flex items-center gap-0">
-                  <X className="w-10 h-10 text-red-600" />
-                  <X className="w-10 h-10 text-red-600" />
-                  <X className="w-10 h-10 text-red-600" />
+                  <div className="flex items-center gap-0">
+                    <X className="w-10 h-10 text-red-600" />
+                    <X className="w-10 h-10 text-red-600" />
+                    <X className="w-10 h-10 text-red-600" />
+                  </div>
+                  <h2 className="text-slate-800 text-2xl md:text-2xl lg:text-2xl font-inter-display font-medium max-w-sm opacity-100 tracking-display-normal">
+                    What's not covered yet
+                  </h2>
+                  <p className="text-slate-700 opacity-70 text-lg md:text-lg font-inter-display font-regular text-left tracking-tight">
+                    Please note that we do not prescribe narcotics & sedatives
+                  </p>
                 </div>
-                <h2 className="text-slate-800 text-2xl md:text-2xl lg:text-2xl font-inter-display font-medium max-w-sm opacity-100 tracking-display-normal">
-                  What's not covered yet
-                </h2>
-                <p className="text-slate-700 opacity-70 text-lg md:text-lg font-inter-display font-regular text-left tracking-tight">
-                  Please note that we do not prescribe narcotics & sedatives
-                </p>
-               
+
+                <div className="w-full overflow-hidden opacity-100 pt-4 rounded-2xl text-center">
+                  <div className="flex flex-wrap gap-4 items-center justify-center pb-2">
+                    <DontTreatItem text="Spinal injuries" />
+                    <DontTreatItem text="Chest pains" />
+                    <DontTreatItem text="Coughing up blood" />
+                    <DontTreatItem text="Severe burns" />
+                    <DontTreatItem text="Birth control" />
+                    <DontTreatItem text="Lacerations" />
+                    <DontTreatItem text="Broken bones" />
+                    <DontTreatItem text="Vomiting blood" />
+                    <DontTreatItem text="Blood in stools" />
+                    <DontTreatItem text="Oral herpes" />
+                  </div>
                 </div>
-               
-               <div className="w-full overflow-hidden opacity-100 pt-4 rounded-2xl text-center">
-                 <div className="flex flex-wrap gap-4 items-center justify-center pb-2">
-                   <DontTreatItem text="Spinal injuries" />
-                   <DontTreatItem text="Chest pains" />
-                   <DontTreatItem text="Coughing up blood" />
-                   <DontTreatItem text="Severe burns" />
-                   <DontTreatItem text="Birth control" />
-                   <DontTreatItem text="Lacerations" />
-                   <DontTreatItem text="Broken bones" />
-                   <DontTreatItem text="Vomiting blood" />
-                   <DontTreatItem text="Blood in stools" />
-                   <DontTreatItem text="Oral herpes" />
-                  
-                 </div>
-               </div>
-               
               </div>
 
               {/* Right Side - Conditions Grid */}
-              
             </div>
-          
           </div>
         </div>
       </section>

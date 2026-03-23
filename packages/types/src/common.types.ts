@@ -21,4 +21,3 @@ export interface SocialHistoryItem {
   type: string;
   level: string;
 }
-

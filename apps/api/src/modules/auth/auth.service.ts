@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   UnauthorizedException,
+  Inject,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@prisma/client";
@@ -11,10 +12,12 @@ import type {
   AuthResponse,
   AuthUser,
   OtpChallengeResponse,
+  RefreshTokenResponse,
 } from "@sniffles/types";
 import { PrismaService } from "../../prisma/prisma.service";
 import type { CompleteSignupDto } from "./dto/complete-signup.dto";
 import type { LoginDto } from "./dto/login.dto";
+import type { RegisterDto } from "./dto/register.dto";
 import type { RequestOtpDto } from "./dto/request-otp.dto";
 import type { VerifyOtpDto } from "./dto/verify-otp.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
@@ -23,10 +26,37 @@ const OTP_TTL_MINUTES = 10;
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  @Inject(PrismaService)
+  private readonly prisma!: PrismaService;
+
+  @Inject(JwtService)
+  private readonly jwtService!: JwtService;
+
+  async register(dto: RegisterDto): Promise<AuthResponse> {
+    const email = this.normalizeEmail(dto.email);
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException("Email already exists");
+    }
+
+    const passwordHash = await hash(dto.password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        fullName: dto.fullName,
+        role: dto.role as UserRole,
+        npiNumber: dto.npiNumber,
+        emailVerifiedAt: new Date(),
+      },
+    });
+
+    return this.issueToken(user);
+  }
 
   async requestOtp(dto: RequestOtpDto): Promise<OtpChallengeResponse> {
     const email = this.normalizeEmail(dto.email);
@@ -45,12 +75,14 @@ export class AuthService {
       where: { email },
       update: {
         role: existingUser?.role ?? (dto.role as UserRole),
+        fullName: dto.fullName ?? existingUser?.fullName ?? null,
         otpCode,
         otpExpiresAt,
       },
       create: {
         email,
         role: dto.role as UserRole,
+        fullName: dto.fullName ?? null,
         otpCode,
         otpExpiresAt,
       },
@@ -118,6 +150,35 @@ export class AuthService {
     return this.issueToken(user);
   }
 
+  async refresh(refreshToken: string): Promise<RefreshTokenResponse> {
+    try {
+      const payload = await this.jwtService.verifyAsync<
+        JwtPayload & { type?: string }
+      >(refreshToken);
+
+      if (payload.type !== "refresh") {
+        throw new UnauthorizedException("Invalid token type");
+      }
+
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+      });
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+
+      const tokens = await this.generateTokenPair({
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      });
+
+      return tokens;
+    } catch {
+      throw new UnauthorizedException("Invalid or expired refresh token");
+    }
+  }
+
   async me(userId: string): Promise<AuthUser> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
@@ -163,32 +224,54 @@ export class AuthService {
     id: string;
     email: string;
     role: UserRole;
+    fullName: string | null;
     emailVerifiedAt: Date | null;
   }): Promise<AuthResponse> {
-    const payload: JwtPayload = {
+    const basePayload: JwtPayload = {
       sub: user.id,
       email: user.email,
       role: user.role,
     };
 
-    const accessToken = await this.jwtService.signAsync(payload);
+    const { accessToken, refreshToken } =
+      await this.generateTokenPair(basePayload);
 
     return {
       accessToken,
+      refreshToken,
       user: this.toAuthUser(user),
     };
+  }
+
+  private async generateTokenPair(
+    payload: JwtPayload,
+  ): Promise<RefreshTokenResponse> {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        { ...payload, type: "access" },
+        { expiresIn: "15m" },
+      ),
+      this.jwtService.signAsync(
+        { ...payload, type: "refresh" },
+        { expiresIn: "7d" },
+      ),
+    ]);
+
+    return { accessToken, refreshToken };
   }
 
   private toAuthUser(user: {
     id: string;
     email: string;
     role: UserRole;
+    fullName: string | null;
     emailVerifiedAt: Date | null;
   }): AuthUser {
     return {
       id: user.id,
       email: user.email,
       role: user.role,
+      fullName: user.fullName,
       emailVerified: Boolean(user.emailVerifiedAt),
     };
   }

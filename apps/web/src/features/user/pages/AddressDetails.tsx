@@ -12,11 +12,10 @@ const STORAGE_KEY = "address-details-draft";
 export default function AddressDetails() {
   const navigate = useNavigate();
   const { profile, setAddressData } = useUserStore();
-  
+
   // Use localStorage to persist form data, with fallback to store or defaults
-  const { value: formData, setValue: setFormData } = useLocalStorage<AddressData>(
-    STORAGE_KEY,
-    {
+  const { value: formData, setValue: setFormData } =
+    useLocalStorage<AddressData>(STORAGE_KEY, {
       defaultValue: profile?.addressData || {
         email: "johndoe@gmail.com",
         phone: "+021 7348-2839",
@@ -25,8 +24,7 @@ export default function AddressDetails() {
         pincode: "",
         city: "New York",
       },
-    }
-  );
+    });
 
   const handleInputChange = (field: keyof AddressData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

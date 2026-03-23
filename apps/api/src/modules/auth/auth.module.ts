@@ -6,17 +6,22 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { RolesGuard } from "./guards/roles.guard";
+import { PrismaModule } from "../../prisma/prisma.module";
 
 @Module({
   imports: [
     ConfigModule,
+    PrismaModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>("JWT_SECRET", "replace-me"),
         signOptions: {
-          expiresIn: configService.get<string>("JWT_EXPIRES_IN", "7d") as StringValue,
+          expiresIn: configService.get<string>(
+            "JWT_EXPIRES_IN",
+            "7d",
+          ) as StringValue,
         },
       }),
     }),

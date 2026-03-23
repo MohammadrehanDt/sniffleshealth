@@ -1,4 +1,10 @@
-import { IsEmail, IsString, Length, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  Length,
+  MinLength,
+} from "class-validator";
 
 export class CompleteSignupDto {
   @IsEmail()
@@ -11,4 +17,9 @@ export class CompleteSignupDto {
   @IsString()
   @MinLength(8)
   password!: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 100)
+  fullName?: string;
 }

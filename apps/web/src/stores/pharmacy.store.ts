@@ -3,7 +3,11 @@
  */
 
 import { create } from "zustand";
-import type { Pharmacy, PharmacyOrder, PrescriptionItem } from "@sniffles/types";
+import type {
+  Pharmacy,
+  PharmacyOrder,
+  PrescriptionItem,
+} from "@sniffles/types";
 
 interface PharmacyStore {
   selectedPharmacy: Pharmacy | null;
@@ -34,10 +38,12 @@ export const usePharmacyStore = create<PharmacyStore>((set) => ({
   setPharmacyAsDefault: (pharmacyId) =>
     set((state) => ({
       selectedPharmacy: state.selectedPharmacy
-        ? { ...state.selectedPharmacy, isDefault: state.selectedPharmacy.id === pharmacyId }
+        ? {
+            ...state.selectedPharmacy,
+            isDefault: state.selectedPharmacy.id === pharmacyId,
+          }
         : null,
     })),
 
   reset: () => set(initialState),
 }));
-

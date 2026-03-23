@@ -1,4 +1,4 @@
-import { IsEmail, IsIn } from "class-validator";
+import { IsEmail, IsIn, IsOptional, IsString, Length } from "class-validator";
 import type { UserRole } from "@sniffles/types";
 
 export class RequestOtpDto {
@@ -7,4 +7,9 @@ export class RequestOtpDto {
 
   @IsIn(["PATIENT", "DOCTOR"])
   role!: UserRole;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 100)
+  fullName?: string;
 }

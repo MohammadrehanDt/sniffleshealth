@@ -3,6 +3,7 @@ import type { AuthUser, UserRole } from "./user.types";
 export interface RequestOtpPayload {
   email: string;
   role: UserRole;
+  fullName?: string;
 }
 
 export interface VerifyOtpPayload {
@@ -20,6 +21,16 @@ export interface CompleteSignupPayload {
   email: string;
   otp: string;
   password: string;
+  fullName?: string;
+  npiNumber?: string;
+}
+
+export interface RegisterPayload {
+  email: string;
+  password: string;
+  fullName: string;
+  role: UserRole;
+  npiNumber?: string;
 }
 
 export interface LoginPayload {
@@ -29,7 +40,17 @@ export interface LoginPayload {
 
 export interface AuthResponse {
   accessToken: string;
+  refreshToken: string;
   user: AuthUser;
+}
+
+export interface RefreshTokenPayload {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface OtpChallengeResponse {

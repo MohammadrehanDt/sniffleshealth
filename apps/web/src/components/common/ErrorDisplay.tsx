@@ -1,6 +1,5 @@
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FONTS } from "@/constants";
 
 export interface ErrorDisplayProps {
   message: string;
@@ -24,9 +23,7 @@ export function ErrorDisplay({
     return (
       <div className={cn("flex items-start gap-2 text-destructive", className)}>
         <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-        <p className="text-sm font-inter">
-          {message}
-        </p>
+        <p className="text-sm font-inter">{message}</p>
       </div>
     );
   }
@@ -44,9 +41,7 @@ export function ErrorDisplay({
           <h3 className="text-semantic-error font-inter font-semibold text-sm mb-1">
             {title}
           </h3>
-          <p className="text-semantic-error text-sm font-inter">
-            {message}
-          </p>
+          <p className="text-semantic-error text-sm font-inter">{message}</p>
           {onRetry && (
             <button
               onClick={onRetry}
@@ -73,9 +68,7 @@ export function ErrorDisplay({
         <h3 className="text-text-dark font-inter font-semibold text-lg mb-2">
           {title}
         </h3>
-        <p className="text-text-light text-sm font-inter">
-          {message}
-        </p>
+        <p className="text-text-light text-sm font-inter">{message}</p>
       </div>
       {onRetry && (
         <button

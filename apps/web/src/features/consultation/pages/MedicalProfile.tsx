@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { X, Info, AlertTriangle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import type { MedicalData } from "@sniffles/types";
 import { ROUTES, FONTS } from "@/constants";
 import { PageHeader, AppFooter } from "@/components/layout";
 import { AIMessage, UserMessage } from "@/components/chat/MessageBubble";
@@ -13,12 +11,8 @@ import {
   useAIChatIntake,
 } from "../hooks";
 import { useScrollToBottom } from "@/hooks";
-import { useConsultationStore } from "@/stores/consultation.store";
-import type { ChatQuestion } from "../constants/chatQuestions";
 
 export default function MedicalProfile() {
-  const navigate = useNavigate();
-  const { selectedCategory } = useConsultationStore();
   const { medicalData, setMedicalData, goToSummary } = useConsultationFlow();
   const { getStepInfo } = useFormNavigation();
   const stepInfo = getStepInfo();
@@ -165,11 +159,13 @@ export default function MedicalProfile() {
                       </div>
                     );
                   })}
-                  {isWaitingForAnswer && messages.length > 0 && messages[messages.length - 1]?.type === "user" && (
-                    <div className="w-full">
-                      <TypingIndicator sender="AI Assistant" />
-                    </div>
-                  )}
+                  {isWaitingForAnswer &&
+                    messages.length > 0 &&
+                    messages[messages.length - 1]?.type === "user" && (
+                      <div className="w-full">
+                        <TypingIndicator sender="AI Assistant" />
+                      </div>
+                    )}
                   <div ref={messagesEndRef} />
                 </div>
               </div>

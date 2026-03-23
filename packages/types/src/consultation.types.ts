@@ -4,7 +4,15 @@
 
 import { SocialHistoryItem } from "./common.types";
 
-export type HealthCategory = "FEVER_FLU" | "SKIN_ISSUES" | "INFECTIONS" | "SEXUAL_HEALTH" | "MEDICATION_REFILL" | "ASTHMA_ALLERGIES" | "UTIS_YEAST_INFECTION" | "WEIGHT_LOSS";
+export type HealthCategory =
+  | "FEVER_FLU"
+  | "SKIN_ISSUES"
+  | "INFECTIONS"
+  | "SEXUAL_HEALTH"
+  | "MEDICATION_REFILL"
+  | "ASTHMA_ALLERGIES"
+  | "UTIS_YEAST_INFECTION"
+  | "WEIGHT_LOSS";
 
 export interface Symptom {
   id: string;
@@ -38,4 +46,3 @@ export interface ConsultationState {
   safetyStopTriggered: boolean;
   safetyStopMessage: string | null;
 }
-

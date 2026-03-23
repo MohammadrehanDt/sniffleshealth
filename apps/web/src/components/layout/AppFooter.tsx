@@ -4,7 +4,6 @@
  */
 
 import { Lock } from "lucide-react";
-import { FONTS } from "@/constants";
 
 export function AppFooter() {
   return (

@@ -19,7 +19,7 @@ export interface UseLocalStorageReturn<T> {
  */
 export function useLocalStorage<T>(
   key: string,
-  options: UseLocalStorageOptions<T> = {}
+  options: UseLocalStorageOptions<T> = {},
 ): UseLocalStorageReturn<T> {
   const {
     defaultValue,
@@ -69,7 +69,7 @@ export function useLocalStorage<T>(
         console.warn(`Error setting localStorage key "${key}":`, error);
       }
     },
-    [key, serializer, value]
+    [key, serializer, value],
   );
 
   const removeValue = useCallback(() => {
@@ -90,4 +90,3 @@ export function useLocalStorage<T>(
     isLoaded,
   };
 }
-
