@@ -51,7 +51,7 @@ export default function Index() {
     {
       label: "Book Appointment",
       variant: activeTab === "Book Appointment" ? "primary" : "secondary",
-      onClick: () => setActiveTab("Book Appointment"),
+      onClick: () => navigate("/appointments"),
     },
     {
       label: "Medication Refill",

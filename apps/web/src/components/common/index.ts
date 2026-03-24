@@ -11,6 +11,7 @@ export type { ErrorDisplayProps } from "./ErrorDisplay";
 export { FormField } from "./FormField";
 export type { FormFieldProps } from "./FormField";
 
+export { AppModal } from "./AppModal";
 export { DataField } from "./DataField";
 export { Tag } from "./Tag";
 export { SearchInput } from "./SearchInput";

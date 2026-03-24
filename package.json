@@ -17,8 +17,7 @@
     "db:generate": "pnpm --filter @sniffles/api prisma:generate",
     "db:migrate": "pnpm --filter @sniffles/api prisma:migrate:dev",
     "db:studio": "pnpm --filter @sniffles/api exec prisma studio",
-    "prisma:generate": "pnpm --filter @sniffles/api prisma:generate",
-    "prisma:migrate:dev": "pnpm --filter @sniffles/api prisma:migrate:dev"
+    "db:deploy": "pnpm --filter @sniffles/api exec prisma migrate deploy && pnpm run db:generate"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

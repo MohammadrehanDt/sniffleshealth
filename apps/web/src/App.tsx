@@ -28,6 +28,7 @@ import {
 } from "@/features/payment/pages";
 import HIPAACompliance from "./pages/HIPAACompliance";
 import { KYC, AddressDetails, Dashboard } from "@/features/user/pages";
+import { AppointmentsPage } from "@/features/appointments/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
 import {
   PharmacySelection,
@@ -108,6 +109,14 @@ export default function App() {
                 element={
                   <ProtectedRoute roles={["PATIENT"]}>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.APPOINTMENTS}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <AppointmentsPage />
                   </ProtectedRoute>
                 }
               />
