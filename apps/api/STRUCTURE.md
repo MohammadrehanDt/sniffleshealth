@@ -1,4 +1,5 @@
 # API Folder Structure
+
 This outlines the NestJS layout so new features slot in predictably.
 
 1. `modules/<domain>/` contains:

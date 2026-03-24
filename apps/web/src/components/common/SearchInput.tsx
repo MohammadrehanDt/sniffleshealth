@@ -19,10 +19,7 @@ export type SearchInputProps = Omit<
   iconPosition?: "start" | "end";
   containerProps?: HTMLAttributes<HTMLDivElement>;
   iconProps?: HTMLAttributes<HTMLSpanElement>;
-  onValueChange?: (
-    value: string,
-    event: ChangeEvent<HTMLInputElement>,
-  ) => void;
+  onValueChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(

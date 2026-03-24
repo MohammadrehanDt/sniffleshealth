@@ -22,7 +22,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className="bg-neutral-off-white px-6 py-4">
-      <div className="max-w-[1464px] mx-auto flex items-center justify-between relative">
+      <div className="app-shell flex items-center justify-between relative">
         {/* Left Side - Back Button & Title */}
         {(backTo || step || title) && (
           <div className="flex items-center gap-3">

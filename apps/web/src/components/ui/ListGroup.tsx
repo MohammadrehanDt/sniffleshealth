@@ -14,18 +14,21 @@ interface ListGroupProps {
   itemClassName?: string;
 }
 
-export function ListGroup({ 
-  items, 
-  variant = "bullet", 
-  className, 
-  itemClassName 
-} : ListGroupProps) {
+export function ListGroup({
+  items,
+  variant = "bullet",
+  className,
+  itemClassName,
+}: ListGroupProps) {
   return (
     <ul className={cn("space-y-1.5", className)}>
       {items.map((item, index) => (
-        <li 
-          key={item.id} 
-          className={cn("flex items-start gap-2 text-sm text-slate-600", itemClassName)}
+        <li
+          key={item.id}
+          className={cn(
+            "flex items-start gap-2 text-sm text-slate-600",
+            itemClassName,
+          )}
         >
           {/* Prefix Logic */}
           <span className="shrink-0 mt-1.5 flex items-center justify-center">
@@ -34,7 +37,9 @@ export function ListGroup({
             ) : variant === "bullet" ? (
               <div className="h-1 w-1 rounded-full bg-slate-400" />
             ) : variant === "number" ? (
-              <span className="text-xs font-medium text-slate-500">{index + 1}.</span>
+              <span className="text-xs font-medium text-slate-500">
+                {index + 1}.
+              </span>
             ) : null}
           </span>
 

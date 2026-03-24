@@ -32,9 +32,7 @@ export function setAuthCookies(
 
   res.cookie(REFRESH_TOKEN_COOKIE, refreshToken, {
     ...baseCookieOptions(),
-    ...(rememberMe
-      ? { maxAge: 30 * 24 * 60 * 60 * 1000 }
-      : {}),
+    ...(rememberMe ? { maxAge: 30 * 24 * 60 * 60 * 1000 } : {}),
   });
 }
 

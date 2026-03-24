@@ -7,6 +7,12 @@
 @tailwind utilities;
 
 @layer utilities {
+  .app-shell {
+    margin-inline: auto;
+    width: min(100%, 1600px);
+    padding-inline: clamp(1rem, 2vw, 2.5rem);
+  }
+
   .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
   }
@@ -102,32 +108,32 @@
     /* ── Design System Color Tokens ── */
 
     /* Primary Palette */
-    --primary-700: #0F5C63;
-    --primary-600: #146D75;
-    --primary-500: #1B7F88;
-    --primary-400: #3C9AA3;
-    --primary-300: #77BCC2;
-    --primary-200: #B8DADD;
-    --primary-100: #E8F4F5;
+    --primary-700: #0f5c63;
+    --primary-600: #146d75;
+    --primary-500: #1b7f88;
+    --primary-400: #3c9aa3;
+    --primary-300: #77bcc2;
+    --primary-200: #b8dadd;
+    --primary-100: #e8f4f5;
 
     /* Background Palette */
-    --bg-default: #F5F8F9;
-    --bg-card: #FFFFFF;
-    --bg-soft: #EAF2F4;
-    --bg-section: #DCE8EB;
+    --bg-default: #f5f8f9;
+    --bg-card: #ffffff;
+    --bg-soft: #eaf2f4;
+    --bg-section: #dce8eb;
 
     /* Semantic Colors */
-    --semantic-success: #2E9E6F;
-    --semantic-warning: #F2A93B;
-    --semantic-error: #E25555;
-    --semantic-info: #3B82F6;
+    --semantic-success: #2e9e6f;
+    --semantic-warning: #f2a93b;
+    --semantic-error: #e25555;
+    --semantic-info: #3b82f6;
 
     /* Neutrals */
-    --neutrals-800: #2F4246;
-    --neutrals-600: #6A7E84;
-    --neutrals-500: #8FA1A6;
-    --neutrals-300: #D7E1E4;
-    --neutrals-200: #E7EEF0;
+    --neutrals-800: #2f4246;
+    --neutrals-600: #6a7e84;
+    --neutrals-500: #8fa1a6;
+    --neutrals-300: #d7e1e4;
+    --neutrals-200: #e7eef0;
     --neutrals-black: #000000;
 
     /* ── shadcn/Radix Semantic Mappings ── */
@@ -185,25 +191,25 @@
 
   .dark {
     /* Dark Mode - Adjusted for design system */
-    --primary-700: #0A4A50;
-    --primary-600: #0F5C63;
-    --primary-500: #1B7F88;
-    --primary-400: #3C9AA3;
-    --primary-300: #77BCC2;
-    --primary-200: #B8DADD;
-    --primary-100: #E8F4F5;
+    --primary-700: #0a4a50;
+    --primary-600: #0f5c63;
+    --primary-500: #1b7f88;
+    --primary-400: #3c9aa3;
+    --primary-300: #77bcc2;
+    --primary-200: #b8dadd;
+    --primary-100: #e8f4f5;
 
     --bg-default: #111827;
-    --bg-card: #1F2937;
-    --bg-soft: #1E3A3E;
-    --bg-section: #253B40;
+    --bg-card: #1f2937;
+    --bg-soft: #1e3a3e;
+    --bg-section: #253b40;
 
-    --neutrals-800: #E7EEF0;
-    --neutrals-600: #8FA1A6;
-    --neutrals-500: #6A7E84;
+    --neutrals-800: #e7eef0;
+    --neutrals-600: #8fa1a6;
+    --neutrals-500: #6a7e84;
     --neutrals-300: #374151;
-    --neutrals-200: #2D3748;
-    --neutrals-black: #FFFFFF;
+    --neutrals-200: #2d3748;
+    --neutrals-black: #ffffff;
 
     --background: 222 47% 11%; /* #111827 */
     --foreground: 0 0% 98%;

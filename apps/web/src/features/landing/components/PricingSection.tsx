@@ -2,7 +2,7 @@ import { PRICING_DATA } from "../constants/landing-data";
 
 export function PricingSection() {
   return (
-    <section className="py-12 md:py-20 px-4 sm:px-6 text-center">
+    <section className="app-shell py-12 md:py-20 text-center">
       <h2 className="text-[#1B2B2E] text-2xl md:text-[32px] font-semibold mb-2">
         Simple, Transparent Pricing
       </h2>
@@ -10,7 +10,7 @@ export function PricingSection() {
         No hidden fees. Pay per visit or subscribe for ongoing care.
       </p>
 
-      <div className="max-w-4xl mx-auto overflow-x-auto">
+      <div className="max-w-[1120px] md:max-w-4xl mx-auto overflow-x-auto">
         <div className="min-w-[400px]">
           {/* Table header */}
           <div className="grid grid-cols-3 gap-1">

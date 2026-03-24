@@ -1,7 +1,7 @@
 export function AIGuideSection() {
   return (
-    <section className="mx-4 sm:mx-6 mb-16 md:mb-20">
-      <div className="max-w-7xl w-full mx-auto flex flex-col items-center">
+    <section className="app-shell mb-16 md:mb-20">
+      <div className="w-full flex flex-col items-center">
         <div className="text-center mb-6">
           <h2 className="text-[#2F4246] text-2xl md:text-[32px] font-semibold mb-2">
             AI Guided Medical Intake
@@ -12,7 +12,7 @@ export function AIGuideSection() {
           </p>
         </div>
 
-        <div className="relative w-full max-w-[962px] mx-auto">
+        <div className="relative w-full max-w-[1180px] md:max-w-[962px] mx-auto">
           {/* Background image */}
           <div className="relative z-10">
             <img

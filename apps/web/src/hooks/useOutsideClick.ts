@@ -1,25 +1,25 @@
 import { RefObject, useEffect } from "react";
 
-  export function useOutsideClick<T extends HTMLElement>(
-    ref: RefObject<T | null>,
-    onOutsideClick: () => void,
-    enabled = true,
-  ) {
-    useEffect(() => {
-      if (!enabled) return;
+export function useOutsideClick<T extends HTMLElement>(
+  ref: RefObject<T | null>,
+  onOutsideClick: () => void,
+  enabled = true,
+) {
+  useEffect(() => {
+    if (!enabled) return;
 
-      const handlePointerDown = (event: MouseEvent | TouchEvent) => {
-        const target = event.target as Node | null;
-        if (!ref.current || !target || ref.current.contains(target)) return;
-        onOutsideClick();
-      };
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!ref.current || !target || ref.current.contains(target)) return;
+      onOutsideClick();
+    };
 
-      document.addEventListener("mousedown", handlePointerDown);
-      document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
 
-      return () => {
-        document.removeEventListener("mousedown", handlePointerDown);
-        document.removeEventListener("touchstart", handlePointerDown);
-      };
-    }, [enabled, onOutsideClick, ref]);
-  }
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [enabled, onOutsideClick, ref]);
+}

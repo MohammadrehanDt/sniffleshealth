@@ -43,7 +43,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       className={cn(
         "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
         variantClasses[config.variant],
-        className
+        className,
       )}
     >
       {status}
