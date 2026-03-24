@@ -14,7 +14,7 @@ export function TagGrid({
   variant = "default",
 }: TagGridProps) {
   return (
-    <div className="max-w-7xl mx-auto text-center">
+    <div className="w-full max-w-[1240px] mx-auto text-center">
       <h2 className="text-[#2F4246] text-2xl md:text-[32px] font-semibold mb-2">
         {title}
       </h2>

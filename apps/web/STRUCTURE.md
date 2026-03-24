@@ -1,4 +1,5 @@
 # Web App Folder Structure
+
 Use this as a checklist whenever you add a new feature so the work stays modular.
 
 1. **Core**:

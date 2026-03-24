@@ -2,8 +2,8 @@ import { HOW_IT_WORKS_STEPS } from "../constants/landing-data";
 
 export function HowItWorksSection() {
   return (
-    <section className="mx-4 sm:mx-6 mb-16 md:mb-20">
-      <div className="max-w-7xl mx-auto bg-gradient-to-br from-[#74AEB1] via-[#3B8288] to-[#125D64] py-10 md:py-12 px-4 sm:px-8 rounded-2xl sm:rounded-[2.5rem]">
+    <section className="app-shell mb-16 md:mb-20">
+      <div className="bg-gradient-to-br from-[#74AEB1] via-[#3B8288] to-[#125D64] py-10 md:py-12 lg:py-14 px-4 sm:px-8 xl:px-12 rounded-2xl sm:rounded-[2.5rem]">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-white text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">
             How It Works

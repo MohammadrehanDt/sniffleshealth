@@ -32,14 +32,46 @@ export interface SidebarSection {
 const sidebarConfig: SidebarSection[] = [
   {
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: "/images/sidebar/dashboard.png" },
-      { title: "Consultations", url: "/consultations", icon: "/images/sidebar/consultations.png" },
-      { title: "Appointments", url: "/appointments", icon: "/images/sidebar/appointments.png" },
-      { title: "Medical Profile", url: "/medical-profile",  icon: "/images/sidebar/medical-profile.png" },
-      { title: "Lab Results", url: "/lab-results", icon: "/images/sidebar/lab.png" },
-      { title: "Medication Refill", url: "/medication-refill", icon: "/images/sidebar/medication-refill.png" },
-      { title: "My Profile", url: "/profile", icon: "/images/sidebar/my-profile.png" },
-      { title: "Billings", url: "/billings", icon: "/images/sidebar/billings.png" },
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: "/images/sidebar/dashboard.png",
+      },
+      {
+        title: "Consultations",
+        url: "/consultations",
+        icon: "/images/sidebar/consultations.png",
+      },
+      {
+        title: "Appointments",
+        url: "/appointments",
+        icon: "/images/sidebar/appointments.png",
+      },
+      {
+        title: "Medical Profile",
+        url: "/medical-profile",
+        icon: "/images/sidebar/medical-profile.png",
+      },
+      {
+        title: "Lab Results",
+        url: "/lab-results",
+        icon: "/images/sidebar/lab.png",
+      },
+      {
+        title: "Medication Refill",
+        url: "/medication-refill",
+        icon: "/images/sidebar/medication-refill.png",
+      },
+      {
+        title: "My Profile",
+        url: "/profile",
+        icon: "/images/sidebar/my-profile.png",
+      },
+      {
+        title: "Billings",
+        url: "/billings",
+        icon: "/images/sidebar/billings.png",
+      },
     ],
   },
 ];
@@ -54,7 +86,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2.5">
-        <Logo className="h-6 w-auto" />
+          <Logo className="h-6 w-auto" />
         </div>
       </SidebarHeader>
 
@@ -79,7 +111,11 @@ export function AppSidebar() {
                         activeClassName="bg-sidebar-primary/15 !text-[#1B7F88] font-medium"
                       >
                         {item.icon ? (
-                          <img src={item.icon} alt={item.title} className="h-4 w-4 shrink-0" />
+                          <img
+                            src={item.icon}
+                            alt={item.title}
+                            className="h-4 w-4 shrink-0"
+                          />
                         ) : item.fallbackIcon ? (
                           <item.fallbackIcon className="h-4 w-4 shrink-0" />
                         ) : null}

@@ -45,11 +45,8 @@ export function HeroSection() {
   };
 
   return (
-    <section className="mx-4 sm:mx-6 my-14 md:mb-20">
-      <div
-        className="max-w-7xl mx-auto bg-[#EAF2F4] rounded-2xl
-  sm:rounded-[3.5rem] px-4 py-8 sm:p-8 md:p-14 lg:p-20 text-center"
-      >
+    <section className="app-shell my-14 md:mb-20">
+      <div className="bg-[#EAF2F4] rounded-2xl sm:rounded-[3.5rem] px-4 py-8 sm:p-8 md:p-14 xl:p-16 2xl:px-20 2xl:py-18 text-center">
         <Button
           className="inline-flex items-center gap-4 text-[#F2F6F7]
   text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-6
@@ -108,7 +105,7 @@ export function HeroSection() {
 
         <div
           className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6
-  mb-10 md:mb-16 max-w-5xl mx-auto"
+  mb-10 md:mb-16 max-w-[1120px] mx-auto"
         >
           {HEALTH_CATEGORIES.map((cat) => (
             <Card
@@ -139,7 +136,7 @@ export function HeroSection() {
 
         <div className="flex flex-col items-center gap-4 sm:gap-5">
           <div className="flex -space-x-3">
-            {[1, 2, 4, 3, 5].map((i) => (
+            {[1, 2, 4].map((i) => (
               <div
                 key={i}
                 className="w-10 h-10 sm:w-14 sm:h-14 rounded-full border-4 border-

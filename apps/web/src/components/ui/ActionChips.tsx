@@ -5,7 +5,7 @@ export interface ActionItem {
   label: string;
   onClick?: () => void;
   href?: string;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: "primary" | "secondary" | "outline";
   isActive?: boolean;
 }
 
@@ -29,7 +29,12 @@ export const ActionChips = ({
   chipClassName,
 }: ActionChipsProps) => {
   return (
-    <div className={cn("w-full border rounded-xl p-4 bg-white", containerClassName)}>
+    <div
+      className={cn(
+        "w-full border rounded-xl p-4 bg-white",
+        containerClassName,
+      )}
+    >
       {title && (
         <h3 className="text-neutral-800 font-bold text-sm mb-4 px-1 tracking-tight">
           {title}
@@ -38,7 +43,8 @@ export const ActionChips = ({
 
       <div className="flex flex-wrap gap-3">
         {actions.map((action, index) => {
-          const actionVariant = action.variant ?? (index === 0 ? "primary" : "secondary");
+          const actionVariant =
+            action.variant ?? (index === 0 ? "primary" : "secondary");
 
           return (
             <Button
@@ -48,7 +54,7 @@ export const ActionChips = ({
               className={cn(
                 "rounded-lg px-5 py-2.5",
                 chipClassName,
-                action.isActive && "ring-2 ring-offset-2 ring-brand-600"
+                action.isActive && "ring-2 ring-offset-2 ring-brand-600",
               )}
             >
               {action.label}

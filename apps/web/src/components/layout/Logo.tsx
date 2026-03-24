@@ -9,7 +9,11 @@ interface LogoProps {
   src?: string;
 }
 
-export function Logo({ size = "md", className = "" ,src="/images/logo.png"}: LogoProps) {
+export function Logo({
+  size = "md",
+  className = "",
+  src = "/images/logo.png",
+}: LogoProps) {
   const sizes = {
     sm: { width: "80", height: "28" },
     md: { width: "96", height: "33" },

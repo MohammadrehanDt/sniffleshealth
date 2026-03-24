@@ -1,10 +1,22 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  Table, TableHeader, TableBody, TableHead, TableRow, TableCell,
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowUpDown, ArrowUp, ArrowDown, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface ColumnDef<T> {
@@ -52,7 +64,11 @@ export function DataTable<T extends object>({
     const q = search.toLowerCase();
     return data.filter((row) => {
       const keys = searchKeys ?? (Object.keys(row as object) as (keyof T)[]);
-      return keys.some((k) => String((row as Record<string, unknown>)[k as string] ?? "").toLowerCase().includes(q));
+      return keys.some((k) =>
+        String((row as Record<string, unknown>)[k as string] ?? "")
+          .toLowerCase()
+          .includes(q),
+      );
     });
   }, [data, search, searchKeys]);
 
@@ -82,7 +98,7 @@ export function DataTable<T extends object>({
       }
       setPage(0);
     },
-    [sortCol, sortDir]
+    [sortCol, sortDir],
   );
 
   return (
@@ -93,7 +109,10 @@ export function DataTable<T extends object>({
           <Input
             placeholder={searchPlaceholder}
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
             className="pl-9"
           />
         </div>
@@ -104,7 +123,10 @@ export function DataTable<T extends object>({
           <TableHeader>
             <TableRow className="bg-muted/50">
               {columns.map((col, i) => (
-                <TableHead key={i} className={cn("whitespace-nowrap", col.className)}>
+                <TableHead
+                  key={i}
+                  className={cn("whitespace-nowrap", col.className)}
+                >
                   {col.sortable !== false ? (
                     <button
                       onClick={() => toggleSort(i)}
@@ -129,13 +151,19 @@ export function DataTable<T extends object>({
           <TableBody>
             {paged.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-8 text-muted-foreground">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-8 text-muted-foreground"
+                >
                   {emptyMessage}
                 </TableCell>
               </TableRow>
             ) : (
               paged.map((row, ri) => (
-                <TableRow key={ri} className="hover:bg-muted/30 transition-colors">
+                <TableRow
+                  key={ri}
+                  className="hover:bg-muted/30 transition-colors"
+                >
                   {columns.map((col, ci) => {
                     const val = getValue(row, col.accessor);
                     return (
@@ -154,10 +182,17 @@ export function DataTable<T extends object>({
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            Showing {safeP * pageSize + 1}–{Math.min((safeP + 1) * pageSize, sorted.length)} of {sorted.length}
+            Showing {safeP * pageSize + 1}–
+            {Math.min((safeP + 1) * pageSize, sorted.length)} of {sorted.length}
           </span>
           <div className="flex items-center gap-1">
-            <Button variant="outline" size="icon" className="h-8 w-8" disabled={safeP === 0} onClick={() => setPage((p) => p - 1)}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              disabled={safeP === 0}
+              onClick={() => setPage((p) => p - 1)}
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             {Array.from({ length: totalPages }, (_, i) => (
@@ -171,7 +206,13 @@ export function DataTable<T extends object>({
                 {i + 1}
               </Button>
             ))}
-            <Button variant="outline" size="icon" className="h-8 w-8" disabled={safeP >= totalPages - 1} onClick={() => setPage((p) => p + 1)}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              disabled={safeP >= totalPages - 1}
+              onClick={() => setPage((p) => p + 1)}
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>

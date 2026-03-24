@@ -2,8 +2,8 @@ import { FEATURES } from "../constants/landing-data";
 
 export function ValuePropSection() {
   return (
-    <section className="mx-4 sm:mx-6 mb-16 md:mb-20">
-      <div className="max-w-7xl w-full mx-auto bg-[#146D75] rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-16 text-center text-white">
+    <section className="app-shell mb-16 md:mb-20">
+      <div className="w-full bg-[#146D75] rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-16 xl:px-20 text-center text-white">
         <h2 className="text-2xl md:text-[32px] text-[#F2F6F7] font-semibold mb-4">
           Your Care, Your Terms, <br /> Just a Click Away
         </h2>
@@ -23,7 +23,7 @@ export function ValuePropSection() {
               className="bg-white rounded-xl p-4  text-left flex flex-col items-start gap-3 md:gap-4"
             >
               <div className="text-lg md:text-xl p-3 bg-[#E8F4F5] rounded">
-               <img
+                <img
                   src={f.image}
                   alt={f.title}
                   className="w-[20px] h-[20px] object-contain"

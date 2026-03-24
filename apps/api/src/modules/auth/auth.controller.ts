@@ -66,7 +66,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
-    setAuthCookies(res, result.accessToken, result.refreshToken, dto.rememberMe);
+    setAuthCookies(
+      res,
+      result.accessToken,
+      result.refreshToken,
+      dto.rememberMe,
+    );
     return { user: result.user };
   }
 

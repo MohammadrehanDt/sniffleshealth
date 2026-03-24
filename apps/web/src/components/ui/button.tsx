@@ -22,8 +22,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         "brand-outline":
           "border border-brand-600 text-brand-600 bg-transparent hover:bg-brand-100",
-        "brand-soft":
-          "bg-brand-100 text-brand-600 hover:bg-brand-200",
+        "brand-soft": "bg-brand-100 text-brand-600 hover:bg-brand-200",
       },
       size: {
         default: "h-10 px-4 py-2",

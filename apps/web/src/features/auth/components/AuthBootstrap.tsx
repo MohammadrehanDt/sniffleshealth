@@ -31,7 +31,16 @@ export function AuthBootstrap() {
     }
 
     setBootstrapped(true);
-  }, [clearSession, data, error, fetchStatus, isBootstrapped, isFetched, setBootstrapped, setUser]);
+  }, [
+    clearSession,
+    data,
+    error,
+    fetchStatus,
+    isBootstrapped,
+    isFetched,
+    setBootstrapped,
+    setUser,
+  ]);
 
   return null;
 }

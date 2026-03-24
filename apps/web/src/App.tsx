@@ -14,7 +14,7 @@ import {
   LoginPage,
   SignupPage,
 } from "@/features/auth/pages";
-import { RootLayout } from "@/components/layout/RootLayout";
+import { PublicLayout, RootLayout } from "@/components/layout";
 import LandingPage from "@/features/landing/pages/LandingPage";
 import {
   Symptoms,
@@ -46,7 +46,10 @@ export default function App() {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path={ROUTES.HOME} element={<LandingPage />} />
+            <Route element={<PublicLayout />}>
+              <Route path={ROUTES.HOME} element={<LandingPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
             <Route
               path={ROUTES.LOGIN}
               element={
@@ -117,7 +120,6 @@ export default function App() {
                 }
               />
             </Route>
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

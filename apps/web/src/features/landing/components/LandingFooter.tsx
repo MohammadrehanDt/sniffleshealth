@@ -9,7 +9,7 @@ export function LandingFooter() {
 
   return (
     <footer className="bg-[#0F5C63] text-white border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-14 py-10 md:py-14">
+      <div className="app-shell py-10 md:py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-20 items-start">
           {/* Branding */}
           <div className="sm:col-span-2 space-y-6 md:space-y-8">

@@ -24,7 +24,11 @@ const recentConsultations = [...consultations]
 const { stats, healthSummary, alerts } = dashboardData;
 
 const columns: ColumnDef<Consultation>[] = [
-  { header: "Date", accessor: "date", render: (val) => formatDate(val as string) },
+  {
+    header: "Date",
+    accessor: "date",
+    render: (val) => formatDate(val as string),
+  },
   { header: "Symptoms", accessor: (row) => row.symptoms ?? "—" },
   { header: "Physician", accessor: "doctor" },
   { header: "Type", accessor: "type" },
