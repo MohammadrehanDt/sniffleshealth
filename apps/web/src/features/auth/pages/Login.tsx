@@ -25,6 +25,8 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    trigger,
+    getValues,
     formState: { errors, isValid },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -100,10 +102,10 @@ export default function LoginPage() {
               onCheckedChange={(checked) => setRememberMe(checked === true)}
               className="h-4 w-4 rounded-[4px] border-[#C8D2D5] data-[state=checked]:border-[#1B6E75] data-[state=checked]:bg-[#1B6E75]"
             />
-            <span className="text-[#1B2B2E] font-medium">Remember me</span>
+            <span className="font-medium text-[#1B2B2E]">Remember me</span>
           </label>
           <Link
-            to="#"
+            to={ROUTES.FORGOT_PASSWORD}
             className="text-[12px] font-medium text-[#3B82F6] hover:underline"
           >
             Forgot password?

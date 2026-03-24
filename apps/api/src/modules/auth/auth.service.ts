@@ -5,9 +5,11 @@ import {
   UnauthorizedException,
   Inject,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
+import { createHash, randomBytes } from "node:crypto";
 import type { AuthUser, OtpChallengeResponse } from "@sniffles/types";
 import { PrismaService } from "../../prisma/prisma.service";
 import type { CompleteSignupDto } from "./dto/complete-signup.dto";
@@ -15,7 +17,10 @@ import type { LoginDto } from "./dto/login.dto";
 import type { RegisterDto } from "./dto/register.dto";
 import type { RequestOtpDto } from "./dto/request-otp.dto";
 import type { VerifyOtpDto } from "./dto/verify-otp.dto";
+import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import type { ResetPasswordDto } from "./dto/reset-password.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
+import { AuthMailService } from "./mail.service";
 
 export interface InternalAuthResult {
   accessToken: string;
@@ -29,6 +34,7 @@ export interface InternalTokenPair {
 }
 
 const OTP_TTL_MINUTES = 10;
+const RESET_PASSWORD_TTL_MINUTES = 10;
 
 @Injectable()
 export class AuthService {
@@ -37,6 +43,12 @@ export class AuthService {
 
   @Inject(JwtService)
   private readonly jwtService!: JwtService;
+
+  @Inject(ConfigService)
+  private readonly configService!: ConfigService;
+
+  @Inject(AuthMailService)
+  private readonly mailService!: AuthMailService;
 
   async register(dto: RegisterDto): Promise<InternalAuthResult> {
     const email = this.normalizeEmail(dto.email);
@@ -154,6 +166,86 @@ export class AuthService {
     }
 
     return this.issueToken(user);
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto) {
+    const email = this.normalizeEmail(dto.email);
+    const genericResponse = {
+      email,
+      expiresInMinutes: RESET_PASSWORD_TTL_MINUTES,
+      message:
+        "If an account exists for this email, a reset link has been sent.",
+    };
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user || !user.passwordHash || !user.emailVerifiedAt) {
+      return genericResponse;
+    }
+
+    const resetToken = randomBytes(32).toString("hex");
+    const resetPasswordTokenExpiresAt = new Date(
+      Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000,
+    );
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordTokenHash: this.hashResetToken(resetToken),
+        resetPasswordTokenExpiresAt,
+      },
+    });
+
+    const webUrl = this.configService
+      .get<string>("WEB_URL", "http://localhost:5173")
+      .replace(/\/+$/, "");
+    const resetLink = `${webUrl}/reset-password?token=${resetToken}`;
+
+    await this.mailService.sendPasswordResetEmail({
+      email,
+      resetLink,
+      expiresInMinutes: RESET_PASSWORD_TTL_MINUTES,
+    });
+
+    return genericResponse;
+  }
+
+  async resetPassword(dto: ResetPasswordDto) {
+    const tokenHash = this.hashResetToken(dto.token);
+    const user = await this.prisma.user.findFirst({
+      where: {
+        resetPasswordTokenHash: tokenHash,
+      },
+    });
+
+    if (!user || !user.resetPasswordTokenExpiresAt) {
+      throw new BadRequestException("This password reset link is invalid");
+    }
+
+    if (user.resetPasswordTokenExpiresAt.getTime() < Date.now()) {
+      throw new BadRequestException("This password reset link has expired");
+    }
+
+    const passwordHash = await hash(dto.password, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        resetPasswordTokenHash: null,
+        resetPasswordTokenExpiresAt: null,
+      },
+    });
+
+    await this.mailService.sendPasswordResetConfirmationEmail(user.email);
+
+    return {
+      success: true,
+      message:
+        "Password reset successful. Please use your new password to log in.",
+    };
   }
 
   async refresh(refreshToken: string): Promise<InternalTokenPair> {
@@ -284,6 +376,10 @@ export class AuthService {
 
   private generateOtp() {
     return String(Math.floor(100000 + Math.random() * 900000));
+  }
+
+  private hashResetToken(token: string) {
+    return createHash("sha256").update(token).digest("hex");
   }
 
   private normalizeEmail(email: string) {

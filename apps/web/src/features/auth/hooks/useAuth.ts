@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import type {
   LoginPayload,
+  ForgotPasswordPayload,
+  ResetPasswordPayload,
   RegisterPayload,
   RequestOtpPayload,
   CompleteSignupPayload,
@@ -105,6 +107,20 @@ export function useCompleteSignup() {
       queryClient.setQueryData(authKeys.me, data.user);
       navigate(getDefaultRouteForRole(data.user.role), { replace: true });
     },
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (payload: ForgotPasswordPayload) =>
+      authApi.forgotPassword(payload),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: (payload: ResetPasswordPayload) =>
+      authApi.resetPassword(payload),
   });
 }
 

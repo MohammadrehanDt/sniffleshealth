@@ -11,10 +11,13 @@ import { GuestRoute } from "@/features/auth/components/GuestRoute";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import {
   DoctorDashboardPage,
+  ForgotPasswordPage,
   LoginPage,
+  ResetPasswordPage,
   SignupPage,
 } from "@/features/auth/pages";
 import { PublicLayout, RootLayout } from "@/components/layout";
+import { ScrollToTop } from "@/lib/scroll-to-top";
 import LandingPage from "@/features/landing/pages/LandingPage";
 import {
   Symptoms,
@@ -46,6 +49,7 @@ export default function App() {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route element={<PublicLayout />}>
               <Route path={ROUTES.HOME} element={<LandingPage />} />
@@ -66,6 +70,14 @@ export default function App() {
                   <SignupPage />
                 </GuestRoute>
               }
+            />
+            <Route
+              path={ROUTES.FORGOT_PASSWORD}
+              element={<ForgotPasswordPage />}
+            />
+            <Route
+              path={ROUTES.RESET_PASSWORD}
+              element={<ResetPasswordPage />}
             />
             <Route path={ROUTES.SYMPTOMS} element={<Symptoms />} />
             <Route path={ROUTES.MEDICAL_PROFILE} element={<MedicalProfile />} />

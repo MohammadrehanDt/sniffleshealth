@@ -15,6 +15,8 @@ import { CurrentUser } from "./decorators/current-user.decorator";
 import { AuthService } from "./auth.service";
 import { CompleteSignupDto } from "./dto/complete-signup.dto";
 import { LoginDto } from "./dto/login.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { RequestOtpDto } from "./dto/request-otp.dto";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
@@ -73,6 +75,16 @@ export class AuthController {
       dto.rememberMe,
     );
     return { user: result.user };
+  }
+
+  @Post("forgot-password")
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @Post("reset-password")
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
   }
 
   @Post("refresh")

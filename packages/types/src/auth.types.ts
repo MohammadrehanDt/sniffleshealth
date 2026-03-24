@@ -39,6 +39,26 @@ export interface LoginPayload {
   rememberMe?: boolean;
 }
 
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  email: string;
+  expiresInMinutes: number;
+  message: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface AuthResponse {
   user: AuthUser;
 }

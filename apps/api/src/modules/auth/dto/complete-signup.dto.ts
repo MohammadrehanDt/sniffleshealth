@@ -1,10 +1,5 @@
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-  Length,
-  MinLength,
-} from "class-validator";
+import { IsEmail, IsOptional, IsString, Length } from "class-validator";
+import { IsStrongPassword } from "./password-validators";
 
 export class CompleteSignupDto {
   @IsEmail()
@@ -14,8 +9,7 @@ export class CompleteSignupDto {
   @Length(6, 6)
   otp!: string;
 
-  @IsString()
-  @MinLength(8)
+  @IsStrongPassword()
   password!: string;
 
   @IsOptional()
