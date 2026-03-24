@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface AppModalProps {
   open: boolean;
@@ -56,9 +55,9 @@ export function AppModal({
               {title}
             </DialogTitle>
           ) : (
-            <VisuallyHidden>
+            <div className="sr-only">
               <DialogTitle>Dialog Modal</DialogTitle>
-            </VisuallyHidden>
+            </div>
           )}
           {description && (
             <DialogDescription className="text-sm text-neutral-500 mt-2">
@@ -67,7 +66,7 @@ export function AppModal({
           )}
         </DialogHeader>
 
-        <div className="overflow-y-auto p-6 pt-0 md:p-8 md:pt-0">
+        <div className="overflow-y-auto p-6 pt-0 md:p-8 md:pt-0 scrollbar-hide">
           {children}
         </div>
       </DialogContent>
