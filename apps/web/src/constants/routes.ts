@@ -22,6 +22,7 @@ export const ROUTES = {
   PHARMACY_SELECTION: "/pharmacy-selection",
   PHARMACY_CONFIRMATION: "/pharmacy-confirmation",
   DASHBOARD: "/dashboard",
+  APPOINTMENTS: "/appointments",
   DOCTOR_DASHBOARD: "/doctor/dashboard",
 } as const;
 
