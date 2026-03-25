@@ -30,7 +30,12 @@ import {
   PaymentConfirmation,
 } from "@/features/payment/pages";
 import HIPAACompliance from "./pages/HIPAACompliance";
-import { KYC, AddressDetails, Dashboard } from "@/features/user/pages";
+import {
+  KYC,
+  AddressDetails,
+  Dashboard,
+  ProfilePage,
+} from "@/features/user/pages";
 import { AppointmentsPage } from "@/features/appointments/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
 import {
@@ -137,6 +142,14 @@ export default function App() {
                 element={
                   <ProtectedRoute roles={["DOCTOR"]}>
                     <DoctorDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.PROFILE}
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
                   </ProtectedRoute>
                 }
               />

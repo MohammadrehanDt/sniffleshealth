@@ -26,6 +26,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   APPOINTMENTS: "/appointments",
   DOCTOR_DASHBOARD: "/doctor/dashboard",
+  PROFILE: "/profile",
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

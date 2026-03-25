@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AppModal } from "@/components/common/AppModal";
+import { DatePickerInput } from "@/components/common/DatePickerInput";
+import { FormField as CommonFormField } from "@/components/common/FormField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CalendarIcon, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { consultations as mockConsultations } from "@/data/mockData";
 import { Appointment } from "@sniffles/types";
 import { toast } from "sonner";
@@ -122,8 +124,6 @@ export function BookingModal({
     }
   };
 
-  const today = new Date().toISOString().split("T")[0];
-
   return (
     <AppModal
       open={open}
@@ -167,17 +167,12 @@ export function BookingModal({
                 <FormLabel className="text-sm font-semibold">
                   Date of Appointment *
                 </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="date"
-                      min={today}
-                      className="bg-white border-neutral-200 rounded-lg pr-10"
-                      {...field}
-                    />
-                    <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
-                  </div>
-                </FormControl>
+                <DatePickerInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Select date"
+                  minDate={new Date()}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -189,16 +184,13 @@ export function BookingModal({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm font-semibold">Time *</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="time"
-                      className="bg-white border-neutral-200 rounded-lg pr-10"
-                      {...field}
-                    />
-                    <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
-                  </div>
-                </FormControl>
+                <CommonFormField trailingIcon={<Clock className="w-4 h-4" />}>
+                  <Input
+                    type="time"
+                    className="bg-white border-neutral-200 rounded-lg pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    {...field}
+                  />
+                </CommonFormField>
                 <FormMessage />
               </FormItem>
             )}

@@ -11,11 +11,16 @@ export interface FormFieldProps {
   className?: string;
   labelClassName?: string;
   labelAction?: ReactNode;
+  trailingIcon?: ReactNode;
 }
 
 /**
  * FormField - Standardized form input wrapper component
  * Provides consistent styling and error handling for form fields
+ *
+ * Pass `trailingIcon` to render an icon inside the right edge of the input.
+ * When used, the children (Input) should NOT add its own right-padding —
+ * FormField applies `pr-10` automatically via relative positioning.
  */
 export function FormField({
   label,
@@ -26,6 +31,7 @@ export function FormField({
   className,
   labelClassName,
   labelAction,
+  trailingIcon,
 }: FormFieldProps) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
@@ -44,7 +50,16 @@ export function FormField({
           {labelAction}
         </div>
       )}
-      {children}
+      {trailingIcon ? (
+        <div className="relative">
+          {children}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none">
+            {trailingIcon}
+          </div>
+        </div>
+      ) : (
+        children
+      )}
       {hint && !error && (
         <p className="text-text-light text-xs font-inter">{hint}</p>
       )}

@@ -51,6 +51,13 @@ export class JwtAuthGuard implements CanActivate {
         role: payload.role,
         fullName: null,
         emailVerified: true,
+        phone: null,
+        dateOfBirth: null,
+        weight: null,
+        weightUnit: null,
+        height: null,
+        heightUnit: null,
+        avatarUrl: null,
       };
 
       request.user = user;
