@@ -16,3 +16,6 @@ export { DataField } from "./DataField";
 export { Tag } from "./Tag";
 export { SearchInput } from "./SearchInput";
 export type { SearchInputProps } from "./SearchInput";
+
+export { DatePickerInput } from "./DatePickerInput";
+export type { DatePickerInputProps } from "./DatePickerInput";

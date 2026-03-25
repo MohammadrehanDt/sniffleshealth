@@ -324,6 +324,13 @@ export class AuthService {
     role: UserRole;
     fullName: string | null;
     emailVerifiedAt: Date | null;
+    phone?: string | null;
+    dateOfBirth?: Date | null;
+    weight?: number | null;
+    weightUnit?: string | null;
+    height?: number | null;
+    heightUnit?: string | null;
+    avatarUrl?: string | null;
   }): Promise<InternalAuthResult> {
     const basePayload: JwtPayload = {
       sub: user.id,
@@ -364,6 +371,13 @@ export class AuthService {
     role: UserRole;
     fullName: string | null;
     emailVerifiedAt: Date | null;
+    phone?: string | null;
+    dateOfBirth?: Date | null;
+    weight?: number | null;
+    weightUnit?: string | null;
+    height?: number | null;
+    heightUnit?: string | null;
+    avatarUrl?: string | null;
   }): AuthUser {
     return {
       id: user.id,
@@ -371,6 +385,13 @@ export class AuthService {
       role: user.role,
       fullName: user.fullName,
       emailVerified: Boolean(user.emailVerifiedAt),
+      phone: user.phone ?? null,
+      dateOfBirth: user.dateOfBirth?.toISOString() ?? null,
+      weight: user.weight ?? null,
+      weightUnit: user.weightUnit ?? null,
+      height: user.height ?? null,
+      heightUnit: user.heightUnit ?? null,
+      avatarUrl: user.avatarUrl ?? null,
     };
   }
 

@@ -4,6 +4,7 @@ import { PrismaModule } from "../prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { HealthModule } from "./health/health.module";
 import { PhysicianModule } from "./physician/physician.module";
+import { UserModule } from "./user/user.module";
 import { envSchema } from "../shared/env.schema";
 
 @Module({
@@ -17,6 +18,7 @@ import { envSchema } from "../shared/env.schema";
     AuthModule,
     HealthModule,
     PhysicianModule,
+    UserModule,
   ],
 })
 export class AppModule {}

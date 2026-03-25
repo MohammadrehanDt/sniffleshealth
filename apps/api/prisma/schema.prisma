@@ -18,6 +18,13 @@ model User {
   fullName        String?
   role            UserRole
   npiNumber       String?
+  phone           String?
+  dateOfBirth     DateTime?
+  weight          Float?
+  weightUnit      String?   @default("kg")
+  height          Float?
+  heightUnit      String?   @default("ft")
+  avatarUrl       String?
   passwordHash              String?
   otpCode                   String?
   otpExpiresAt              DateTime?
@@ -26,4 +33,24 @@ model User {
   emailVerifiedAt           DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+
+  addresses       Address[]
+}
+
+model Address {
+  id              String    @id @default(cuid())
+  userId          String
+  label           String
+  addressLine1    String
+  addressLine2    String?
+  state           String
+  city            String
+  zipCode         String
+  isDefault       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
