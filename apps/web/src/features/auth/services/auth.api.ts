@@ -3,6 +3,10 @@ import type {
   AuthUser,
   CompleteSignupPayload,
   LoginPayload,
+  ForgotPasswordPayload,
+  ForgotPasswordResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
   OtpChallengeResponse,
   RegisterPayload,
   RequestOtpPayload,
@@ -32,6 +36,16 @@ export const authApi = {
 
   login: (payload: LoginPayload) =>
     api.post<AuthResponse>("/auth/login", payload).then((r) => r.data),
+
+  forgotPassword: (payload: ForgotPasswordPayload) =>
+    api
+      .post<ForgotPasswordResponse>("/auth/forgot-password", payload)
+      .then((r) => r.data),
+
+  resetPassword: (payload: ResetPasswordPayload) =>
+    api
+      .post<ResetPasswordResponse>("/auth/reset-password", payload)
+      .then((r) => r.data),
 
   refresh: () => api.post("/auth/refresh").then((r) => r.data),
 

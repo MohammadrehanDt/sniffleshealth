@@ -18,10 +18,12 @@ model User {
   fullName        String?
   role            UserRole
   npiNumber       String?
-  passwordHash    String?
-  otpCode         String?
-  otpExpiresAt    DateTime?
-  emailVerifiedAt DateTime?
+  passwordHash              String?
+  otpCode                   String?
+  otpExpiresAt              DateTime?
+  resetPasswordTokenHash    String?
+  resetPasswordTokenExpiresAt DateTime?
+  emailVerifiedAt           DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }

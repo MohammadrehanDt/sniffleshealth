@@ -1,6 +1,10 @@
 import { z } from "zod";
-
-// ── Shared field validators (match backend DTOs exactly) ────────────────────
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_SPECIAL_CHARACTERS,
+  passwordMessages,
+  passwordPatterns,
+} from "@sniffles/utils";
 
 const email = z
   .string()
@@ -11,43 +15,43 @@ const password = z.string().superRefine((value, ctx) => {
   if (!value) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Password is required",
+      message: passwordMessages.required,
     });
     return;
   }
 
-  if (value.length < 8) {
+  if (value.length < PASSWORD_MIN_LENGTH) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Minimum 8 characters",
+      message: passwordMessages.minLength,
     });
   }
 
-  if (!/[a-z]/.test(value)) {
+  if (!passwordPatterns.lowercase.test(value)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Must contain a lowercase letter",
+      message: passwordMessages.lowercase,
     });
   }
 
-  if (!/[A-Z]/.test(value)) {
+  if (!passwordPatterns.uppercase.test(value)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Must contain an uppercase letter",
+      message: passwordMessages.uppercase,
     });
   }
 
-  if (!/\d/.test(value)) {
+  if (!passwordPatterns.number.test(value)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Must contain a number",
+      message: passwordMessages.number,
     });
   }
 
-  if (!/[@$!%*?&]/.test(value)) {
+  if (!passwordPatterns.specialCharacter.test(value)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Must contain a special character (@$!%*?&)",
+      message: `Must contain a special character (${PASSWORD_SPECIAL_CHARACTERS})`,
     });
   }
 });
@@ -60,22 +64,32 @@ const fullName = z
 
 const npiNumber = z.string().regex(/^\d{10}$/, "Must be exactly 10 digits");
 
-// ── Login schema ────────────────────────────────────────────────────────────
+const confirmPassword = z.string().min(1, "Confirm password is required");
+
+function refinePasswordMatch<
+  T extends { password: string; confirmPassword: string },
+>(data: T, ctx: z.RefinementCtx) {
+  if (data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+  }
+}
 
 export const loginSchema = z.object({
   email,
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(1, passwordMessages.required),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
-
-// ── Registration schemas (role-conditional) ─────────────────────────────────
 
 const baseRegisterSchema = z.object({
   fullName,
   email,
   password,
-  confirmPassword: z.string().min(1, "Confirm password is required"),
+  confirmPassword,
   role: z.enum(["PATIENT", "DOCTOR"]),
 });
 
@@ -90,14 +104,21 @@ const doctorRegisterSchema = baseRegisterSchema.extend({
 
 export const registerSchema = z
   .discriminatedUnion("role", [patientRegisterSchema, doctorRegisterSchema])
-  .superRefine((data, ctx) => {
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Passwords do not match",
-        path: ["confirmPassword"],
-      });
-    }
-  });
+  .superRefine(refinePasswordMatch);
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email,
+});
+
+export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z
+  .object({
+    password,
+    confirmPassword,
+  })
+  .superRefine(refinePasswordMatch);
+
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;

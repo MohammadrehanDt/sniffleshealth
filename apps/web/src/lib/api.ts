@@ -1,6 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "@/stores/auth.store";
-import { clearSessionFlag } from "@/features/auth/hooks/useAuth";
+import { clearSessionFlag, hasSession } from "@/features/auth/hooks/useAuth";
 
 // ── Axios instance ──────────────────────────────────────────────────────────
 
@@ -36,13 +36,25 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    const isRefreshEndpoint = originalRequest?.url === "/auth/refresh";
-
-    if (
+    const requestUrl = originalRequest?.url ?? "";
+    const isRefreshEndpoint = requestUrl === "/auth/refresh";
+    const isPublicAuthEndpoint = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/request-otp",
+      "/auth/verify-otp",
+      "/auth/complete-signup",
+      "/auth/forgot-password",
+      "/auth/reset-password",
+    ].includes(requestUrl);
+    const shouldAttemptRefresh =
       error.response?.status === 401 &&
+      hasSession() &&
       !originalRequest._retry &&
-      !isRefreshEndpoint
-    ) {
+      !isRefreshEndpoint &&
+      !isPublicAuthEndpoint;
+
+    if (shouldAttemptRefresh) {
       if (isRefreshing) {
         return new Promise<void>((resolve, reject) => {
           pendingQueue.push({ resolve, reject });
