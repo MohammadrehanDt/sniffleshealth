@@ -11,7 +11,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
   SYMPTOMS: "/symptoms",
-  MEDICAL_PROFILE: "/medical-profile",
+  MEDICAL_PROFILE_OLD: "/medical-profile",
   SUMMARY: "/summary",
   CONSULTATION: "/consultation",
   SELECT_CONSULTATION_TYPE: "/select-consultation-type",
@@ -39,6 +39,7 @@ export const ROUTES = {
   ADMIN_DASHBOARD: "/admin/dashboard",
   PROFILE: "/profile",
   INTAKE: "/consultations",
+  PATIENT_MEDICAL_PROFILE: "/medical-profile",
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
