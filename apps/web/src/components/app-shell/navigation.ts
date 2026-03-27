@@ -2,6 +2,7 @@ import type { UserRole } from "@sniffles/types";
 import {
   CalendarDays,
   ClipboardList,
+  FileText,
   Home,
   MessageSquareText,
   Pill,
@@ -23,9 +24,12 @@ export const navigationByRole: Record<UserRole, NavigationItem[]> = {
     { label: "Dashboard", to: ROUTES.DASHBOARD, icon: Home },
     { label: "Consultations", to: ROUTES.DOCTOR_CHAT, icon: MessageSquareText },
     { label: "Appointments", to: ROUTES.FINDING_DOCTOR, icon: CalendarDays },
-    { label: "Prescriptions", to: ROUTES.PRESCRIPTION, icon: Pill },
     { label: "Medical Profile", to: ROUTES.MEDICAL_PROFILE, icon: Stethoscope },
-    { label: "Profile", to: ROUTES.PROFILE, icon: User },
+    { label: "Diagnostic Results", to: ROUTES.PRESCRIPTION, icon: FileText },
+    { label: "My Pharmacy", to: ROUTES.PHARMACY_SELECTION, icon: Pill },
+    { label: "Medication Refill", to: ROUTES.MEDICATION_REFILL, icon: Pill },
+    { label: "My Profile", to: ROUTES.PROFILE, icon: User },
+    { label: "Billings", to: ROUTES.PAYMENT_CONFIRMATION, icon: FileText },
   ],
   DOCTOR: [
     { label: "Dashboard", to: ROUTES.DOCTOR_DASHBOARD, icon: Home },
