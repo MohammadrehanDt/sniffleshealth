@@ -8,6 +8,7 @@ import {
   patientProfile,
 } from "@/data/mockData";
 import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AlertBanner } from "@/components/common/AlertBanner";
 import { StatsCard } from "@/components/common/StatsCard";
@@ -56,7 +57,7 @@ export default function Index() {
     {
       label: "Medication Refill",
       variant: activeTab === "Medication Refill" ? "primary" : "secondary",
-      onClick: () => setActiveTab("Medication Refill"),
+      onClick: () => navigate(ROUTES.MEDICATION_REFILL),
     },
     {
       label: "View Lab Results",

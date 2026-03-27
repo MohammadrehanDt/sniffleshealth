@@ -35,6 +35,7 @@ import {
   AddressDetails,
   Dashboard,
   ProfilePage,
+  MedicationRefill,
 } from "@/features/user/pages";
 import { AppointmentsPage } from "@/features/appointments/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
@@ -134,6 +135,14 @@ export default function App() {
                 element={
                   <ProtectedRoute roles={["PATIENT"]}>
                     <AppointmentsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.MEDICATION_REFILL}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <MedicationRefill />
                   </ProtectedRoute>
                 }
               />
