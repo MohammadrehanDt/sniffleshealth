@@ -60,9 +60,9 @@ export default function Index() {
       onClick: () => navigate(ROUTES.MEDICATION_REFILL),
     },
     {
-      label: "View Lab Results",
-      variant: activeTab === "View Lab Results" ? "primary" : "secondary",
-      onClick: () => setActiveTab("View Lab Results"),
+      label: "View Diagnostic Results",
+      variant: activeTab === "View Diagnostic Results" ? "primary" : "secondary",
+      onClick: () => navigate("/diagnostic-results"),
     },
   ];
 

@@ -48,6 +48,8 @@ import {
 import IntakeFlowPage from "@/features/intake/pages/IntakeFlowPage";
 import Prescription from "./pages/Prescription";
 import NotFound from "./pages/NotFound";
+import DiagnosticResultsPage from "@/features/diagnostic-results/pages/DiagnosticResultsPage";
+import DiagnosticResultDetailsPage from "@/features/diagnostic-results/pages/DiagnosticResultDetailsPage";
 import { queryClient } from "@/lib/query-client";
 import AdminDashboardPage from "@/features/admin/pages/AdminDashboard";
 import LicenseListPage from "@/features/licenses/pages/LicenseListPage";
@@ -197,6 +199,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DIAGNOSTIC_RESULTS}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <DiagnosticResultsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DIAGNOSTIC_RESULT_DETAILS}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <DiagnosticResultDetailsPage />
                   </ProtectedRoute>
                 }
               />
