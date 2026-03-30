@@ -31,7 +31,7 @@ export const navigationByRole: Record<UserRole, NavigationItem[]> = {
     { label: "Dashboard", to: ROUTES.DASHBOARD, icon: Home },
     { label: "Consultations", to: ROUTES.DOCTOR_CHAT, icon: MessageSquareText },
     { label: "Appointments", to: ROUTES.FINDING_DOCTOR, icon: CalendarDays },
-    { label: "Medical Profile", to: ROUTES.MEDICAL_PROFILE, icon: Stethoscope },
+    { label: "Medical Profile", to: ROUTES.PATIENT_MEDICAL_PROFILE, icon: Stethoscope },
     { label: "Diagnostic Results", to: ROUTES.PRESCRIPTION, icon: FileText },
     { label: "My Pharmacy", to: ROUTES.PHARMACY_SELECTION, icon: Pill },
     { label: "Medication Refill", to: ROUTES.MEDICATION_REFILL, icon: Pill },

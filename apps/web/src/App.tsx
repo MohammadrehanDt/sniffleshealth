@@ -37,6 +37,7 @@ import {
   Dashboard,
   ProfilePage,
   MedicationRefill,
+  PatientMedicalProfile
 } from "@/features/user/pages";
 import { AppointmentsPage } from "@/features/appointments/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
@@ -99,7 +100,7 @@ export default function App() {
               element={<ResetPasswordPage />}
             />
             <Route path={ROUTES.SYMPTOMS} element={<Symptoms />} />
-            <Route path={ROUTES.MEDICAL_PROFILE} element={<MedicalProfile />} />
+            <Route path={ROUTES.MEDICAL_PROFILE_OLD} element={<MedicalProfile />} />
             <Route path={ROUTES.SUMMARY} element={<SummaryConsultation />} />
             <Route path={ROUTES.CONSULTATION} element={<Consultation />} />
             <Route
@@ -140,6 +141,14 @@ export default function App() {
                 element={
                   <ProtectedRoute roles={["PATIENT"]}>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.PATIENT_MEDICAL_PROFILE + "/:id?"}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <PatientMedicalProfile />
                   </ProtectedRoute>
                 }
               />
