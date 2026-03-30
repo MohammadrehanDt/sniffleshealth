@@ -12,6 +12,7 @@ import type {
 import { authApi } from "../services/auth.api";
 import { useAuthStore } from "@/stores/auth.store";
 import { getDefaultRouteForRole } from "../utils/auth-routing";
+import { ROUTES } from "@/constants";
 
 export const authKeys = {
   me: ["auth", "me"] as const,
@@ -70,6 +71,14 @@ export function useRegister() {
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: (data) => {
+      if (data.pendingVerification || !data.user) {
+        clearSessionFlag();
+        setUser(null);
+        setBootstrapped(true);
+        navigate(ROUTES.DOCTOR_PENDING_VERIFICATION, { replace: true });
+        return;
+      }
+
       setSessionFlag();
       setUser(data.user);
       setBootstrapped(true);
@@ -101,6 +110,14 @@ export function useCompleteSignup() {
     mutationFn: (payload: CompleteSignupPayload) =>
       authApi.completeSignup(payload),
     onSuccess: (data) => {
+      if (data.pendingVerification || !data.user) {
+        clearSessionFlag();
+        setUser(null);
+        setBootstrapped(true);
+        navigate(ROUTES.DOCTOR_PENDING_VERIFICATION, { replace: true });
+        return;
+      }
+
       setSessionFlag();
       setUser(data.user);
       setBootstrapped(true);

@@ -63,6 +63,10 @@ const fullName = z
   .regex(/^[a-zA-Z\s-]+$/, "Only letters, spaces, and hyphens");
 
 const npiNumber = z.string().regex(/^\d{10}$/, "Must be exactly 10 digits");
+const phone = z
+  .string()
+  .min(10, "Must be at least 10 characters")
+  .max(20, "Must be under 20 characters");
 
 const confirmPassword = z.string().min(1, "Confirm password is required");
 
@@ -100,6 +104,7 @@ const patientRegisterSchema = baseRegisterSchema.extend({
 const doctorRegisterSchema = baseRegisterSchema.extend({
   role: z.literal("DOCTOR"),
   npiNumber,
+  phone,
 });
 
 export const registerSchema = z

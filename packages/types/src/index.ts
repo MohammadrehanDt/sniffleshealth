@@ -10,3 +10,4 @@ export * from "./pharmacy.types";
 export * from "./api";
 export * from "./auth.types";
 export * from "./appointment.types";
+export * from "./license.types";
