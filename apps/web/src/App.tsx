@@ -43,6 +43,7 @@ import {
   PharmacySelection,
   PharmacyConfirmation,
 } from "@/features/pharmacy/pages";
+import IntakeFlowPage from "@/features/intake/pages/IntakeFlowPage";
 import Prescription from "./pages/Prescription";
 import NotFound from "./pages/NotFound";
 import { queryClient } from "@/lib/query-client";
@@ -59,6 +60,7 @@ export default function App() {
           <Routes>
             <Route element={<PublicLayout />}>
               <Route path={ROUTES.HOME} element={<LandingPage />} />
+              <Route path={ROUTES.INTAKE} element={<IntakeFlowPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route

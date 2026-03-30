@@ -10,3 +10,4 @@ export type {
 } from "./useLocalStorage";
 export { useDebounce, useDebouncedCallback } from "./useDebounce";
 export type { UseDebounceOptions } from "./useDebounce";
+export { useGeoState } from "./useGeoState";

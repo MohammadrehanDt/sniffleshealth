@@ -80,7 +80,7 @@ export default function Index() {
         <Button
           variant="brand"
           className="rounded-lg"
-          onClick={() => navigate("/consultations/new")}
+          onClick={() => navigate("/consultations")}
         >
           Add New Consultation
         </Button>

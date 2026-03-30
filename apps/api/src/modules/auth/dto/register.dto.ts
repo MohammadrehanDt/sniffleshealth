@@ -31,4 +31,8 @@ export class RegisterDto {
   @Length(10, 10, { message: "NPI Number must be exactly 10 digits" })
   @Matches(/^\d{10}$/, { message: "NPI Number must be numeric only" })
   npiNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  healthieProviderId?: string;
 }

@@ -1,25 +1,38 @@
 import { Check, Download } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { ROUTES, FONTS } from "@/constants";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 import { PageHeader, AppFooter } from "@/components/layout";
 
 export default function PaymentConfirmation() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const payment = (
+    location.state as {
+      payment?: {
+        requestedPaymentId?: string;
+        invoiceId?: string | null;
+        amount?: string | null;
+        status?: string | null;
+        currency?: string | null;
+        createdAt?: string | null;
+      };
+    } | null
+  )?.payment;
 
-  // Sample invoice data - in a real app, this would come from state/API
-  const invoiceId = "JSDKM483";
-  const paymentDate = "25th March 2024, 12:34 PM";
-  const amount = "$25";
+  const invoiceId =
+    payment?.invoiceId ?? payment?.requestedPaymentId ?? "Pending";
+  const paymentDate = payment?.createdAt
+    ? new Date(payment.createdAt).toLocaleString()
+    : "Awaiting Healthie invoice timestamp";
+  const amount = payment?.amount ? `$${payment.amount}` : "Pending";
+  const status = payment?.status ?? "Not Yet Paid";
 
   const handleDownloadInvoice = () => {
-    // Handle invoice download
-    console.log("Downloading invoice:", invoiceId);
-    // In a real app, this would trigger a download
+    window.print();
   };
 
   const handleContinue = () => {
-    // Navigate to HIPAA compliance page
-    navigate(ROUTES.HIPAA_COMPLIANCE);
+    navigate(ROUTES.DASHBOARD);
   };
 
   return (
@@ -43,13 +56,14 @@ export default function PaymentConfirmation() {
 
                 {/* Success Heading */}
                 <h1 className="text-5xl font-inter-display font-medium leading-44 tracking-tight text-center text-neutral-charcoal">
-                  Payment Successful
+                  Payment Requested
                 </h1>
 
                 {/* Success Message */}
                 <p className="text-text-secondary text-base font-inter leading-6 text-center w-full">
-                  Your payment of USD 25 is complete. You can download the
-                  invoice for the payment below
+                  We created your consultation invoice in Healthie. Payment is
+                  no longer local-only, and the request is now tracked against
+                  this consultation.
                 </p>
 
                 {/* Invoice Card */}
@@ -61,6 +75,9 @@ export default function PaymentConfirmation() {
                     </p>
                     <p className="text-text-secondary text-base font-inter font-medium leading-6">
                       {paymentDate}
+                    </p>
+                    <p className="text-text-secondary text-base font-inter font-medium leading-6">
+                      Status: {status}
                     </p>
                   </div>
 
@@ -83,7 +100,7 @@ export default function PaymentConfirmation() {
                   onClick={handleContinue}
                   className="bg-brand-cyan-dark text-white font-inter px-6 py-3 rounded-2xl font-semibold text-base leading-6 hover:bg-brand-cyan-dark/90 transition-colors h-[57px] flex items-center justify-center w-full"
                 >
-                  Continue with consultation
+                  Go to dashboard
                 </button>
               </div>
             </div>

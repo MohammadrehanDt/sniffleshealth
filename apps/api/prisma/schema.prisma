@@ -25,6 +25,8 @@ model User {
   height          Float?
   heightUnit      String?   @default("ft")
   avatarUrl       String?
+  healthiePatientId String?   @unique
+  healthieProviderId String?  @unique
   passwordHash              String?
   otpCode                   String?
   otpExpiresAt              DateTime?
@@ -34,7 +36,9 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  addresses       Address[]
+  addresses               Address[]
+  consultationsAsPatient  Consultation[] @relation("PatientConsultations")
+  consultationsAsDoctor   Consultation[] @relation("DoctorConsultations")
 }
 
 model Address {
@@ -53,4 +57,48 @@ model Address {
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum ConsultationStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Consultation {
+  id                String             @id @default(cuid())
+  patientId         String
+  doctorId          String?
+  healthieRequestedPaymentId String?   @unique
+  paymentStatus     String?
+  paymentAmount     String?
+  firstName         String
+  lastName          String
+  state             String
+  dob               String
+  gender            String
+  severity          Int
+  consultationType  String
+  status            ConsultationStatus @default(PENDING)
+  symptoms          Json
+  followUp          Json
+  vitals            Json
+  medicalHistory    Json
+  surgicalHistory   Json
+  allergies         Json
+  medications       Json
+  socialHistory     Json
+  soapNote          Json?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  patient           User               @relation("PatientConsultations", fields: [patientId], references: [id], onDelete: Restrict)
+  doctor            User?              @relation("DoctorConsultations", fields: [doctorId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([state])
 }

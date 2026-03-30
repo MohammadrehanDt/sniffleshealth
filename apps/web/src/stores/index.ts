@@ -9,3 +9,4 @@ export * from "./doctor.store";
 export * from "./pharmacy.store";
 export * from "./doctor-consultation.store";
 export * from "./auth.store";
+export * from "./geo.store";

@@ -38,8 +38,7 @@ export function SelectDropdown<T extends string = string>({
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full bg-white rounded-xl shadow-sm border border-gray-100 p-4
-  sm:p-5 flex items-center justify-between transition-all hover:border-gray-200"
+        className="w-full bg-white rounded  border border-neutral-300 p-4 h-12 flex items-center justify-between transition-all hover:border-gray-200"
       >
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-gray-400 font-medium text-sm">{label}</span>

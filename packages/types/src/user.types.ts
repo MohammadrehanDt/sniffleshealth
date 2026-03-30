@@ -24,6 +24,8 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   fullName: string | null;
+  healthiePatientId?: string | null;
+  healthieProviderId?: string | null;
   emailVerified: boolean;
   phone: string | null;
   dateOfBirth: string | null;

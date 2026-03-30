@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { format } from "date-fns";
+import { useMemo, useState } from "react";
+import { format, isValid, parse, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,24 @@ export interface DatePickerInputProps {
   maxDate?: Date;
 }
 
+function parseDateValue(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const isoDate = parseISO(value);
+  if (isValid(isoDate)) {
+    return isoDate;
+  }
+
+  const displayDate = parse(value, "MM/dd/yyyy", new Date());
+  if (isValid(displayDate)) {
+    return displayDate;
+  }
+
+  return undefined;
+}
+
 export function DatePickerInput({
   value,
   onChange,
@@ -31,7 +49,7 @@ export function DatePickerInput({
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
 
-  const selectedDate = value ? new Date(value) : undefined;
+  const selectedDate = useMemo(() => parseDateValue(value), [value]);
 
   function handleSelect(date: Date | undefined) {
     if (date) {
@@ -47,8 +65,8 @@ export function DatePickerInput({
           type="button"
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal rounded-xl border-neutral-200 h-12 px-3 hover:bg-transparent focus-visible:ring-brand-500",
-            !value && "text-muted-foreground",
+            "h-12 w-full justify-start rounded-xl border-neutral-200 px-3 text-left font-normal hover:bg-transparent focus-visible:ring-brand-500",
+            !selectedDate && "text-muted-foreground",
             className,
           )}
         >

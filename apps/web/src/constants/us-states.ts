@@ -4,6 +4,31 @@ export interface USStateOption {
   flag: string;
 }
 
+/**
+ * States where Sniffles Health has licensed providers.
+ * Update this list as new states are onboarded.
+ */
+export const SERVICED_STATES = new Set([
+  "CA",
+  "FL",
+  "TX",
+  "NY",
+  "IL",
+  "PA",
+  "OH",
+  "GA",
+  "NC",
+  "NJ",
+]);
+
+export const UNSUPPORTED_STATE_MESSAGE =
+  "We currently do not support consultations in your selected state.";
+
+export function isServicedState(code?: string | null) {
+  console.log("Checking if state is serviced:", code);
+  return code ? SERVICED_STATES.has(code) : false;
+}
+
 export const US_STATES: USStateOption[] = [
   { name: "Alabama", code: "AL", flag: "https://flagcdn.com/w40/us-al.png" },
   { name: "Alaska", code: "AK", flag: "https://flagcdn.com/w40/us-ak.png" },

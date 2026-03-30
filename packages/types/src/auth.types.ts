@@ -31,6 +31,7 @@ export interface RegisterPayload {
   fullName: string;
   role: UserRole;
   npiNumber?: string;
+  healthieProviderId?: string;
 }
 
 export interface LoginPayload {
