@@ -4,6 +4,8 @@ export interface RequestOtpPayload {
   email: string;
   role: UserRole;
   fullName?: string;
+  npiNumber?: string;
+  phone?: string;
 }
 
 export interface VerifyOtpPayload {
@@ -23,6 +25,7 @@ export interface CompleteSignupPayload {
   password: string;
   fullName?: string;
   npiNumber?: string;
+  phone?: string;
 }
 
 export interface RegisterPayload {
@@ -31,6 +34,7 @@ export interface RegisterPayload {
   fullName: string;
   role: UserRole;
   npiNumber?: string;
+  phone?: string;
   healthieProviderId?: string;
 }
 
@@ -61,7 +65,9 @@ export interface ResetPasswordResponse {
 }
 
 export interface AuthResponse {
-  user: AuthUser;
+  user?: AuthUser;
+  pendingVerification?: boolean;
+  message?: string;
 }
 
 export interface RefreshTokenResponse {

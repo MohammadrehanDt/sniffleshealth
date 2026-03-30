@@ -10,6 +10,13 @@ import {
   Stethoscope,
   User,
   Users,
+  FileBadge2,
+  ClipboardCheck,
+  Activity,
+  BriefcaseMedical,
+  CreditCard,
+  UserCheck,
+  Calendar,
 } from "lucide-react";
 import { ROUTES } from "@/constants";
 
@@ -33,9 +40,42 @@ export const navigationByRole: Record<UserRole, NavigationItem[]> = {
   ],
   DOCTOR: [
     { label: "Dashboard", to: ROUTES.DOCTOR_DASHBOARD, icon: Home },
-    { label: "Reviews", to: ROUTES.DOCTOR_CHAT, icon: ClipboardList },
-    { label: "Patients", to: ROUTES.FINDING_DOCTOR, icon: Users },
-    { label: "Compliance", to: ROUTES.HIPAA_COMPLIANCE, icon: ShieldCheck },
-    { label: "Profile", to: ROUTES.PROFILE, icon: User },
+    {
+      label: "My Consultations",
+      to: ROUTES.DOCTOR_CONSULTATIONS,
+      icon: MessageSquareText,
+    },
+    { label: "Appointments", to: ROUTES.DOCTOR_APPOINTMENTS, icon: Calendar },
+    {
+      label: "Medical Profile",
+      to: ROUTES.DOCTOR_MEDICAL_PROFILE,
+      icon: UserCheck,
+    },
+    {
+      label: "Diagnostic Results",
+      to: ROUTES.DOCTOR_DIAGNOSTICS,
+      icon: Activity,
+    },
+    {
+      label: "My Pharmacy",
+      to: ROUTES.DOCTOR_PHARMACY,
+      icon: BriefcaseMedical,
+    },
+    {
+      label: "Medication Refill",
+      to: ROUTES.DOCTOR_MEDICATION_REFILL,
+      icon: Pill,
+    },
+    { label: "My Profile", to: ROUTES.PROFILE, icon: User },
+    { label: "Billings", to: ROUTES.DOCTOR_BILLINGS, icon: CreditCard },
+  ],
+  ADMIN: [
+    { label: "Dashboard", to: ROUTES.ADMIN_DASHBOARD, icon: Home },
+    {
+      label: "Doctor Reviews",
+      to: ROUTES.ADMIN_DASHBOARD,
+      icon: ClipboardCheck,
+    },
+    { label: "License Reviews", to: ROUTES.ADMIN_DASHBOARD, icon: FileBadge2 },
   ],
 };

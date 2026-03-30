@@ -17,7 +17,12 @@ export interface UserProfile {
   hipaaCompliant: boolean;
 }
 
-export type UserRole = "PATIENT" | "DOCTOR";
+export type UserRole = "PATIENT" | "DOCTOR" | "ADMIN";
+
+export type DoctorVerificationStatus =
+  | "PENDING_VERIFICATION"
+  | "VERIFIED"
+  | "REJECTED";
 
 export interface AuthUser {
   id: string;
@@ -34,6 +39,8 @@ export interface AuthUser {
   height: number | null;
   heightUnit: string | null;
   avatarUrl: string | null;
+  verificationStatus?: DoctorVerificationStatus | null;
+  npiNumber?: string | null;
 }
 
 /** Payload for PATCH /users/profile */

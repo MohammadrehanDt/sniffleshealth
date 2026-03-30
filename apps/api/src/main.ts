@@ -1,11 +1,16 @@
 import "reflect-metadata";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
 import { AppModule } from "./modules/app.module";
+import { ensureUploadDirectories, UPLOAD_DIR } from "./shared/upload.utils";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  ensureUploadDirectories();
+  app.useStaticAssets(UPLOAD_DIR, { prefix: "/uploads" });
 
   app.use(cookieParser());
   app.enableCors({

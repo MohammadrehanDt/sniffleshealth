@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { UserRole } from "@sniffles/types";
 import { ROUTES } from "@/constants";
 import { useRegister } from "../hooks/useAuth";
 import {
@@ -41,14 +40,14 @@ export default function SignupPage() {
   const passwordField = register("password");
   const confirmPasswordField = register("confirmPassword" as any);
 
-  function handleRoleChange(newRole: UserRole) {
+  function handleRoleChange(newRole: "PATIENT" | "DOCTOR") {
     reset({
       fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
       role: newRole,
-      ...(newRole === "DOCTOR" ? { npiNumber: "" } : {}),
+      ...(newRole === "DOCTOR" ? { npiNumber: "", phone: "" } : {}),
     });
   }
 
@@ -60,6 +59,7 @@ export default function SignupPage() {
         password: data.password,
         role: data.role,
         npiNumber: data.role === "DOCTOR" ? data.npiNumber.trim() : undefined,
+        phone: data.role === "DOCTOR" ? data.phone.trim() : undefined,
       },
       {
         onError: (err) => {
@@ -138,21 +138,37 @@ export default function SignupPage() {
         </FormField>
 
         {role === "DOCTOR" && (
-          <FormField
-            label="NPI Number"
-            error={
-              (errors as Record<string, { message?: string }>).npiNumber
-                ?.message
-            }
-            labelClassName="text-[#4D4D4D] text-[13px] font-normal mb-1.5"
-          >
-            <Input
-              {...register("npiNumber" as keyof RegisterFormValues)}
-              placeholder="Enter NPI Number"
-              maxLength={10}
-              className={`h-[42px] border-[#E5E7EB] placeholder:text-[#A3A3A3] text-sm focus:border-[#1B6E75] focus-visible:ring-0 rounded-lg ${(errors as Record<string, unknown>).npiNumber ? "border-semantic-error" : ""}`}
-            />
-          </FormField>
+          <>
+            <FormField
+              label="NPI Number"
+              error={
+                (errors as Record<string, { message?: string }>).npiNumber
+                  ?.message
+              }
+              labelClassName="text-[#4D4D4D] text-[13px] font-normal mb-1.5"
+            >
+              <Input
+                {...register("npiNumber" as keyof RegisterFormValues)}
+                placeholder="Enter NPI Number"
+                maxLength={10}
+                className={`h-[42px] border-[#E5E7EB] placeholder:text-[#A3A3A3] text-sm focus:border-[#1B6E75] focus-visible:ring-0 rounded-lg ${(errors as Record<string, unknown>).npiNumber ? "border-semantic-error" : ""}`}
+              />
+            </FormField>
+
+            <FormField
+              label="Cell Phone Number"
+              error={
+                (errors as Record<string, { message?: string }>).phone?.message
+              }
+              labelClassName="text-[#4D4D4D] text-[13px] font-normal mb-1.5"
+            >
+              <Input
+                {...register("phone" as keyof RegisterFormValues)}
+                placeholder="Enter cell phone number"
+                className={`h-[42px] border-[#E5E7EB] placeholder:text-[#A3A3A3] text-sm focus:border-[#1B6E75] focus-visible:ring-0 rounded-lg ${(errors as Record<string, unknown>).phone ? "border-semantic-error" : ""}`}
+              />
+            </FormField>
+          </>
         )}
 
         <AuthPasswordField

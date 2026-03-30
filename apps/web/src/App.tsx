@@ -11,6 +11,7 @@ import { GuestRoute } from "@/features/auth/components/GuestRoute";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import {
   DoctorDashboardPage,
+  DoctorPendingVerificationPage,
   ForgotPasswordPage,
   LoginPage,
   ResetPasswordPage,
@@ -47,6 +48,8 @@ import IntakeFlowPage from "@/features/intake/pages/IntakeFlowPage";
 import Prescription from "./pages/Prescription";
 import NotFound from "./pages/NotFound";
 import { queryClient } from "@/lib/query-client";
+import AdminDashboardPage from "@/features/admin/pages/AdminDashboard";
+import LicenseListPage from "@/features/licenses/pages/LicenseListPage";
 
 export default function App() {
   return (
@@ -76,6 +79,14 @@ export default function App() {
               element={
                 <GuestRoute>
                   <SignupPage />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path={ROUTES.DOCTOR_PENDING_VERIFICATION}
+              element={
+                <GuestRoute>
+                  <DoctorPendingVerificationPage />
                 </GuestRoute>
               }
             />
@@ -153,6 +164,22 @@ export default function App() {
                 element={
                   <ProtectedRoute roles={["DOCTOR"]}>
                     <DoctorDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DOCTOR_LICENSES}
+                element={
+                  <ProtectedRoute roles={["DOCTOR"]}>
+                    <LicenseListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.ADMIN_DASHBOARD}
+                element={
+                  <ProtectedRoute roles={["ADMIN"]}>
+                    <AdminDashboardPage />
                   </ProtectedRoute>
                 }
               />

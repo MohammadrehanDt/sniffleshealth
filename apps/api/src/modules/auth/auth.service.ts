@@ -20,14 +20,21 @@ import type { VerifyOtpDto } from "./dto/verify-otp.dto";
 import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import type { ResetPasswordDto } from "./dto/reset-password.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
-import { AuthMailService } from "./mail.service";
 import { HealthieService } from "../healthie/healthie.service";
+import { MailService } from "../mail/mail.service";
 
 export interface InternalAuthResult {
   accessToken: string;
   refreshToken: string;
   user: AuthUser;
 }
+
+export interface PendingVerificationResult {
+  pendingVerification: true;
+  message: string;
+}
+
+export type RegisterResult = InternalAuthResult | PendingVerificationResult;
 
 export interface InternalTokenPair {
   accessToken: string;
@@ -48,13 +55,13 @@ export class AuthService {
   @Inject(ConfigService)
   private readonly configService!: ConfigService;
 
-  @Inject(AuthMailService)
-  private readonly mailService!: AuthMailService;
+  @Inject(MailService)
+  private readonly mailService!: MailService;
 
   @Inject(HealthieService)
   private readonly healthieService!: HealthieService;
 
-  async register(dto: RegisterDto): Promise<InternalAuthResult> {
+  async register(dto: RegisterDto): Promise<RegisterResult> {
     const email = this.normalizeEmail(dto.email);
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -65,6 +72,7 @@ export class AuthService {
     }
 
     const passwordHash = await hash(dto.password, 10);
+    const isDoctor = dto.role === "DOCTOR";
 
     const user = await this.prisma.user.create({
       data: {
@@ -73,14 +81,23 @@ export class AuthService {
         fullName: dto.fullName,
         role: dto.role as UserRole,
         npiNumber: dto.npiNumber,
-        healthieProviderId:
-          dto.role === "DOCTOR" ? dto.healthieProviderId : undefined,
+        phone: dto.phone,
+        healthieProviderId: isDoctor ? dto.healthieProviderId : undefined,
         emailVerifiedAt: new Date(),
+        verificationStatus: isDoctor ? "PENDING_VERIFICATION" : undefined,
       },
     });
 
+    if (isDoctor) {
+      this.syncHealthieProvider(user);
+      return {
+        pendingVerification: true,
+        message:
+          "Your account has been submitted for verification. You will receive an email once approved by our admin team.",
+      };
+    }
+
     this.syncHealthiePatient(user);
-    this.syncHealthieProvider(user);
 
     return this.issueToken(user);
   }
@@ -103,6 +120,18 @@ export class AuthService {
       update: {
         role: existingUser?.role ?? (dto.role as UserRole),
         fullName: dto.fullName ?? existingUser?.fullName ?? null,
+        npiNumber:
+          dto.role === "DOCTOR"
+            ? (dto.npiNumber ?? existingUser?.npiNumber ?? null)
+            : null,
+        phone:
+          dto.role === "DOCTOR"
+            ? (dto.phone ?? existingUser?.phone ?? null)
+            : null,
+        verificationStatus:
+          dto.role === "DOCTOR"
+            ? (existingUser?.verificationStatus ?? "PENDING_VERIFICATION")
+            : null,
         otpCode,
         otpExpiresAt,
       },
@@ -110,6 +139,10 @@ export class AuthService {
         email,
         role: dto.role as UserRole,
         fullName: dto.fullName ?? null,
+        npiNumber: dto.role === "DOCTOR" ? (dto.npiNumber ?? null) : null,
+        phone: dto.role === "DOCTOR" ? (dto.phone ?? null) : null,
+        verificationStatus:
+          dto.role === "DOCTOR" ? "PENDING_VERIFICATION" : null,
         otpCode,
         otpExpiresAt,
       },
@@ -134,7 +167,7 @@ export class AuthService {
     };
   }
 
-  async completeSignup(dto: CompleteSignupDto): Promise<InternalAuthResult> {
+  async completeSignup(dto: CompleteSignupDto): Promise<RegisterResult> {
     const user = await this.requireUser(dto.email);
 
     if (user.passwordHash && user.emailVerifiedAt) {
@@ -144,6 +177,16 @@ export class AuthService {
     this.ensureValidOtp(user.otpCode, user.otpExpiresAt, dto.otp);
 
     const passwordHash = await hash(dto.password, 10);
+    const isDoctor = user.role === UserRole.DOCTOR;
+
+    if (
+      isDoctor &&
+      (!(dto.npiNumber ?? user.npiNumber) || !(dto.phone ?? user.phone))
+    ) {
+      throw new BadRequestException(
+        "Doctor signup requires NPI number and phone number",
+      );
+    }
 
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },
@@ -152,11 +195,22 @@ export class AuthService {
         otpCode: null,
         otpExpiresAt: null,
         emailVerifiedAt: new Date(),
+        npiNumber: dto.npiNumber ?? user.npiNumber ?? undefined,
+        phone: dto.phone ?? user.phone ?? undefined,
+        verificationStatus: isDoctor ? "PENDING_VERIFICATION" : undefined,
       },
     });
 
+    if (isDoctor) {
+      this.syncHealthieProvider(updatedUser);
+      return {
+        pendingVerification: true,
+        message:
+          "Your account has been submitted for verification. You will receive an email once approved by our admin team.",
+      };
+    }
+
     this.syncHealthiePatient(updatedUser);
-    this.syncHealthieProvider(updatedUser);
 
     return this.issueToken(updatedUser);
   }
@@ -175,6 +229,19 @@ export class AuthService {
     const isValid = await compare(dto.password, user.passwordHash);
     if (!isValid) {
       throw new UnauthorizedException("Invalid email or password");
+    }
+
+    if (user.role === UserRole.DOCTOR) {
+      if (user.verificationStatus === "PENDING_VERIFICATION") {
+        throw new UnauthorizedException(
+          "Your account is pending admin verification. You will receive an email once approved.",
+        );
+      }
+      if (user.verificationStatus === "REJECTED") {
+        throw new UnauthorizedException(
+          "Your registration has been declined. Please contact support.",
+        );
+      }
     }
 
     if (user.role === UserRole.PATIENT && !user.healthiePatientId) {
@@ -401,6 +468,8 @@ export class AuthService {
     height?: number | null;
     heightUnit?: string | null;
     avatarUrl?: string | null;
+    verificationStatus?: string | null;
+    npiNumber?: string | null;
   }): AuthUser {
     return {
       id: user.id,
@@ -417,6 +486,9 @@ export class AuthService {
       height: user.height ?? null,
       heightUnit: user.heightUnit ?? null,
       avatarUrl: user.avatarUrl ?? null,
+      verificationStatus:
+        (user.verificationStatus as AuthUser["verificationStatus"]) ?? null,
+      npiNumber: user.npiNumber ?? null,
     };
   }
 
