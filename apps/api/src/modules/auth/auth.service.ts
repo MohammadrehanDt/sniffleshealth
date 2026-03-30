@@ -21,6 +21,7 @@ import type { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import type { ResetPasswordDto } from "./dto/reset-password.dto";
 import type { JwtPayload } from "./interfaces/jwt-payload.interface";
 import { AuthMailService } from "./mail.service";
+import { HealthieService } from "../healthie/healthie.service";
 
 export interface InternalAuthResult {
   accessToken: string;
@@ -50,6 +51,9 @@ export class AuthService {
   @Inject(AuthMailService)
   private readonly mailService!: AuthMailService;
 
+  @Inject(HealthieService)
+  private readonly healthieService!: HealthieService;
+
   async register(dto: RegisterDto): Promise<InternalAuthResult> {
     const email = this.normalizeEmail(dto.email);
     const existingUser = await this.prisma.user.findUnique({
@@ -69,9 +73,14 @@ export class AuthService {
         fullName: dto.fullName,
         role: dto.role as UserRole,
         npiNumber: dto.npiNumber,
+        healthieProviderId:
+          dto.role === "DOCTOR" ? dto.healthieProviderId : undefined,
         emailVerifiedAt: new Date(),
       },
     });
+
+    this.syncHealthiePatient(user);
+    this.syncHealthieProvider(user);
 
     return this.issueToken(user);
   }
@@ -146,6 +155,9 @@ export class AuthService {
       },
     });
 
+    this.syncHealthiePatient(updatedUser);
+    this.syncHealthieProvider(updatedUser);
+
     return this.issueToken(updatedUser);
   }
 
@@ -163,6 +175,13 @@ export class AuthService {
     const isValid = await compare(dto.password, user.passwordHash);
     if (!isValid) {
       throw new UnauthorizedException("Invalid email or password");
+    }
+
+    if (user.role === UserRole.PATIENT && !user.healthiePatientId) {
+      this.syncHealthiePatient(user);
+    }
+    if (user.role === UserRole.DOCTOR && !user.healthieProviderId) {
+      this.syncHealthieProvider(user);
     }
 
     return this.issueToken(user);
@@ -323,6 +342,8 @@ export class AuthService {
     email: string;
     role: UserRole;
     fullName: string | null;
+    healthiePatientId?: string | null;
+    healthieProviderId?: string | null;
     emailVerifiedAt: Date | null;
     phone?: string | null;
     dateOfBirth?: Date | null;
@@ -370,6 +391,8 @@ export class AuthService {
     email: string;
     role: UserRole;
     fullName: string | null;
+    healthiePatientId?: string | null;
+    healthieProviderId?: string | null;
     emailVerifiedAt: Date | null;
     phone?: string | null;
     dateOfBirth?: Date | null;
@@ -384,6 +407,8 @@ export class AuthService {
       email: user.email,
       role: user.role,
       fullName: user.fullName,
+      healthiePatientId: user.healthiePatientId ?? null,
+      healthieProviderId: user.healthieProviderId ?? null,
       emailVerified: Boolean(user.emailVerifiedAt),
       phone: user.phone ?? null,
       dateOfBirth: user.dateOfBirth?.toISOString() ?? null,
@@ -401,6 +426,50 @@ export class AuthService {
 
   private hashResetToken(token: string) {
     return createHash("sha256").update(token).digest("hex");
+  }
+
+  private syncHealthiePatient(user: {
+    id: string;
+    email: string;
+    fullName: string | null;
+    role: UserRole;
+  }) {
+    if (user.role !== UserRole.PATIENT) {
+      return;
+    }
+
+    this.healthieService
+      .createPatientForUser(user.id, user.email, user.fullName)
+      .catch(() => {});
+  }
+
+  private syncHealthieProvider(user: {
+    id: string;
+    role: UserRole;
+    npiNumber?: string | null;
+    healthieProviderId?: string | null;
+  }) {
+    if (
+      user.role !== UserRole.DOCTOR ||
+      !user.npiNumber ||
+      user.healthieProviderId
+    ) {
+      return;
+    }
+
+    this.healthieService
+      .findProviderIdByNpi(user.npiNumber)
+      .then((providerId) => {
+        if (!providerId) {
+          return;
+        }
+
+        return this.prisma.user.update({
+          where: { id: user.id },
+          data: { healthieProviderId: providerId },
+        });
+      })
+      .catch(() => {});
   }
 
   private normalizeEmail(email: string) {

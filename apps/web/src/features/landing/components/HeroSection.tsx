@@ -1,11 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { UnsupportedStateAlert } from "@/components/common/UnsupportedStateAlert";
 import { SelectDropdown } from "@/components/common/SelectDropdown";
 import { SearchInput } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ROUTES, US_STATES } from "@/constants";
+import { useGeoState } from "@/hooks/useGeoState";
+import { cn } from "@/lib/utils";
 import { useConsultationStore } from "@/stores/consultation.store";
 import type { HealthCategory } from "@sniffles/types";
 import { SectionHeading } from "./SectionHeading";
@@ -14,14 +17,30 @@ import { HEALTH_CATEGORIES } from "../constants/landing-data";
 export function HeroSection() {
   const navigate = useNavigate();
   const { setSelectedCategory } = useConsultationStore();
-  const [selectedStateCode, setSelectedStateCode] = useState(US_STATES[0].code);
+  const {
+    stateCode: detectedState,
+    isLoading: geoLoading,
+    stateName,
+  } = useGeoState();
+  const [selectedStateCode, setSelectedStateCode] = useState("");
+  const [showUnsupportedAlert, setShowUnsupportedAlert] = useState(false);
+  const [autoFilled, setAutoFilled] = useState(false);
 
-  const selectedState = useMemo(
-    () =>
-      US_STATES.find((state) => state.code === selectedStateCode) ??
-      US_STATES[0],
-    [selectedStateCode],
-  );
+  useEffect(() => {
+    if (geoLoading || autoFilled) return;
+    setAutoFilled(true);
+    if (detectedState) {
+      setSelectedStateCode(detectedState);
+    } else {
+      setShowUnsupportedAlert(true);
+    }
+  }, [geoLoading, autoFilled, detectedState]);
+
+  const isBlocked = selectedStateCode === "" && autoFilled;
+
+  const handleStateChange = (value: string) => {
+    setSelectedStateCode(value);
+  };
 
   const stateOptions = useMemo(
     () =>
@@ -40,12 +59,22 @@ export function HeroSection() {
   );
 
   const handleCategoryClick = (category: HealthCategory) => {
+    if (isBlocked) {
+      setShowUnsupportedAlert(true);
+      return;
+    }
     setSelectedCategory(category);
-    navigate(ROUTES.SYMPTOMS);
+    navigate(`${ROUTES.SYMPTOMS}?state=${selectedStateCode}`);
   };
 
   return (
     <section className="app-shell my-14 md:mb-20">
+      <UnsupportedStateAlert
+        open={showUnsupportedAlert}
+        onOpenChange={setShowUnsupportedAlert}
+        stateName={stateName || null}
+      />
+
       <div className="bg-[#EAF2F4] rounded-2xl sm:rounded-[3.5rem] px-4 py-8 sm:p-8 md:p-14 xl:p-16 2xl:px-20 2xl:py-18 text-center">
         <Button
           className="inline-flex items-center gap-4 text-[#F2F6F7]
@@ -78,23 +107,37 @@ export function HeroSection() {
           >
             <SelectDropdown
               label="State"
-              value={selectedState.code}
+              value={selectedStateCode}
               options={stateOptions}
-              onChange={setSelectedStateCode}
+              onChange={handleStateChange}
               className="sm:w-56 md:w-64"
             />
 
             <SearchInput
               placeholder="I have a sore throat and fever..."
               icon={<Mic className="h-5 w-5" />}
-              containerClassName="flex-1 border border-gray-100 p-4 sm:p-5 transition-all hover:border-gray-200"
+              containerClassName="flex-1 h-12  border border-neutral-300  p-4 sm:p-5 transition-all hover:border-gray-200"
             />
           </div>
 
+          {isBlocked ? (
+            <p className="mt-2 text-sm text-amber-600">
+              We do not currently serve your selected state.
+            </p>
+          ) : null}
+
           <div className="flex justify-center mt-4">
             <Button
-              className="bg-brand-700 hover:bg-brand-800 text-[#E8F4F5]
-  font-medium text-sm rounded-xl px-8 h-11 sm:h-12"
+              className={cn(
+                "bg-brand-700 hover:bg-brand-800 text-[#E8F4F5] font-medium text-sm rounded-xl px-8 h-11 sm:h-12",
+                isBlocked && "opacity-50 cursor-not-allowed",
+              )}
+              disabled={isBlocked || !selectedStateCode}
+              onClick={() => {
+                if (!isBlocked && selectedStateCode) {
+                  navigate(`${ROUTES.INTAKE}?state=${selectedStateCode}`);
+                }
+              }}
             >
               Start Consultation
             </Button>

@@ -5,6 +5,8 @@ import { AuthModule } from "./auth/auth.module";
 import { HealthModule } from "./health/health.module";
 import { PhysicianModule } from "./physician/physician.module";
 import { UserModule } from "./user/user.module";
+import { HealthieModule } from "./healthie/healthie.module";
+import { ConsultationModule } from "./consultation/consultation.module";
 import { envSchema } from "../shared/env.schema";
 
 @Module({
@@ -19,6 +21,8 @@ import { envSchema } from "../shared/env.schema";
     HealthModule,
     PhysicianModule,
     UserModule,
+    HealthieModule,
+    ConsultationModule,
   ],
 })
 export class AppModule {}

@@ -28,6 +28,7 @@ export const ROUTES = {
   MEDICATION_REFILL: "/medication-refill",
   DOCTOR_DASHBOARD: "/doctor/dashboard",
   PROFILE: "/profile",
+  INTAKE: "/consultations",
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

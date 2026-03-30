@@ -8,11 +8,13 @@ import { AuthMailService } from "./mail.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { RolesGuard } from "./guards/roles.guard";
 import { PrismaModule } from "../../prisma/prisma.module";
+import { HealthieModule } from "../healthie/healthie.module";
 
 @Module({
   imports: [
     ConfigModule,
     PrismaModule,
+    HealthieModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

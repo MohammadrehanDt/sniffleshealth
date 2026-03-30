@@ -55,7 +55,7 @@ export default function MedicationRefillPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRefilling, setIsRefilling] = useState<string | null>(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -69,13 +69,15 @@ export default function MedicationRefillPage() {
   // Filtered medications
   const filteredMedications = useMemo(() => {
     return medications.filter((med) => {
-      const matchesSearch = 
+      const matchesSearch =
         med.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         med.pharmacy.toLowerCase().includes(searchQuery.toLowerCase()) ||
         med.lastFilledDate.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesStatus = statusFilter === "all" || med.status.toLowerCase() === statusFilter.toLowerCase();
-      
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        med.status.toLowerCase() === statusFilter.toLowerCase();
+
       return matchesSearch && matchesStatus;
     });
   }, [medications, searchQuery, statusFilter]);
@@ -166,17 +168,23 @@ export default function MedicationRefillPage() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3 h-[41px]">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="flex items-center gap-2 border-[#D7E1E4] w-[98px] h-[41px] rounded-[8px] pt-[12px] pb-[12px] pl-[20px] pr-[20px] bg-white hover:bg-neutral-50"
-            onClick={() => setStatusFilter(statusFilter === "all" ? "active" : "all")}
+            onClick={() =>
+              setStatusFilter(statusFilter === "all" ? "active" : "all")
+            }
           >
-            <img src="/images/funnel.png" alt="Filter" className="w-4 h-4 opacity-100" />
+            <img
+              src="/images/funnel.png"
+              alt="Filter"
+              className="w-4 h-4 opacity-100"
+            />
             <span className="text-[14px] font-medium leading-[120%] text-[#8FA1A6] font-inter">
               {statusFilter === "all" ? "Filter" : statusFilter}
             </span>
           </Button>
-          <Button 
+          <Button
             className="bg-brand-cyan-dark hover:bg-brand-cyan-dark/90 text-white flex items-center gap-2 rounded-[8px] h-full px-4"
             onClick={() => setIsModalOpen(true)}
           >
@@ -189,7 +197,10 @@ export default function MedicationRefillPage() {
       <div className="flex flex-col gap-4 w-full max-w-[1171px]">
         {filteredMedications.length > 0 ? (
           filteredMedications.map((med) => (
-            <Card key={med.id} className="w-full border-[#D7E1E4] rounded-[8px] bg-white shadow-none">
+            <Card
+              key={med.id}
+              className="w-full border-[#D7E1E4] rounded-[8px] bg-white shadow-none"
+            >
               <CardContent className="p-4 flex flex-col gap-4">
                 <div className="flex items-start justify-between w-full">
                   <div className="flex flex-col gap-2">
@@ -203,13 +214,15 @@ export default function MedicationRefillPage() {
                       {med.pharmacy}
                     </p>
                   </div>
-                  
-                  <Badge 
+
+                  <Badge
                     className={cn(
                       "rounded-[30px] px-[10px] py-[4px] text-[12px] font-normal leading-[120%] border-none",
-                      med.status === "Active" ? "bg-[#2E9E6F] text-[#F2F6F7]" : 
-                      med.status === "Awaiting" ? "bg-amber-500 text-white" : 
-                      "bg-neutral-400 text-white"
+                      med.status === "Active"
+                        ? "bg-[#2E9E6F] text-[#F2F6F7]"
+                        : med.status === "Awaiting"
+                          ? "bg-amber-500 text-white"
+                          : "bg-neutral-400 text-white",
                     )}
                   >
                     {med.status}
@@ -217,17 +230,17 @@ export default function MedicationRefillPage() {
                 </div>
 
                 {med.status === "Active" && (
-                   <Button
-                     className="w-[132px] h-[41px] bg-[#E8F4F5] text-[#0F5C63] hover:bg-[#E8F4F5]/90 rounded-[8px] text-[14px] font-medium font-inter leading-[120%] pt-[12px] pb-[12px] pl-[20px] pr-[20px] shadow-none"
-                     onClick={() => handleRequestRefill(med.id)}
-                     disabled={isRefilling === med.id}
-                   >
-                     {isRefilling === med.id ? (
-                       <Clock className="w-4 h-4 animate-spin mr-2" />
-                     ) : null}
-                     Request Refill
-                   </Button>
-                 )}
+                  <Button
+                    className="w-[132px] h-[41px] bg-[#E8F4F5] text-[#0F5C63] hover:bg-[#E8F4F5]/90 rounded-[8px] text-[14px] font-medium font-inter leading-[120%] pt-[12px] pb-[12px] pl-[20px] pr-[20px] shadow-none"
+                    onClick={() => handleRequestRefill(med.id)}
+                    disabled={isRefilling === med.id}
+                  >
+                    {isRefilling === med.id ? (
+                      <Clock className="w-4 h-4 animate-spin mr-2" />
+                    ) : null}
+                    Request Refill
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))
@@ -236,9 +249,12 @@ export default function MedicationRefillPage() {
             <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mb-4">
               <AlertCircle className="w-8 h-8 text-neutral-400" />
             </div>
-            <h3 className="text-lg font-medium text-neutral-slate">No medications found</h3>
+            <h3 className="text-lg font-medium text-neutral-slate">
+              No medications found
+            </h3>
             <p className="text-neutral-500 max-w-xs mx-auto">
-              Try adjusting your search or filter to find what you're looking for.
+              Try adjusting your search or filter to find what you're looking
+              for.
             </p>
           </div>
         )}
@@ -254,10 +270,13 @@ export default function MedicationRefillPage() {
               </DialogTitle>
             </div>
           </DialogHeader>
-          
+
           <div className="flex flex-col gap-4 mt-0 w-full">
             <div className="flex flex-col gap-2 h-[66px]">
-              <Label htmlFor="med-name" className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter">
+              <Label
+                htmlFor="med-name"
+                className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter"
+              >
                 Medication Name
               </Label>
               <Input
@@ -265,53 +284,68 @@ export default function MedicationRefillPage() {
                 placeholder="Enter medication name"
                 className={cn(
                   "h-[41px] border-[#D7E1E4] rounded-[8px] text-[14px] font-inter font-normal leading-[120%] placeholder:text-[#8FA1A6]",
-                  errors.name && "border-red-500 focus-visible:ring-red-500"
+                  errors.name && "border-red-500 focus-visible:ring-red-500",
                 )}
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
-              {errors.name && <p className="text-xs text-red-500 mt-[-4px]">{errors.name}</p>}
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-[-4px]">{errors.name}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 h-[66px]">
-              <Label htmlFor="pharmacy" className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter">
+              <Label
+                htmlFor="pharmacy"
+                className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter"
+              >
                 Pharmacy
               </Label>
-              <Select 
+              <Select
                 onValueChange={(val) => handleInputChange("pharmacy", val)}
                 value={formData.pharmacy}
               >
-                <SelectTrigger 
+                <SelectTrigger
                   id="pharmacy"
                   className={cn(
                     "h-[41px] border-[#D7E1E4] rounded-[8px] bg-white px-4 py-3 flex items-center justify-between text-[14px] font-inter font-normal leading-[120%] text-[#8FA1A6] [&>svg]:hidden group",
-                    errors.pharmacy && "border-red-500 focus-visible:ring-red-500"
+                    errors.pharmacy &&
+                      "border-red-500 focus-visible:ring-red-500",
                   )}
                 >
                   <SelectValue placeholder="Select pharmacy" />
-                  <img 
-                    src="/images/chevron-down.png" 
-                    alt="chevron-down" 
-                    className="w-[9px] h-[12px] opacity-100 transition-transform duration-200 group-data-[state=open]:rotate-180" 
-                    style={{ 
-                      fontFamily: "'Font Awesome 6 Free'", 
-                      fontWeight: 900, 
-                      fontSize: "10px", 
-                      lineHeight: "120%" 
+                  <img
+                    src="/images/chevron-down.png"
+                    alt="chevron-down"
+                    className="w-[9px] h-[12px] opacity-100 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                    style={{
+                      fontFamily: "'Font Awesome 6 Free'",
+                      fontWeight: 900,
+                      fontSize: "10px",
+                      lineHeight: "120%",
                     }}
                   />
                 </SelectTrigger>
                 <SelectContent>
                   {PHARMACIES.map((p) => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                    <SelectItem key={p} value={p}>
+                      {p}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.pharmacy && <p className="text-xs text-red-500 mt-[-4px]">{errors.pharmacy}</p>}
+              {errors.pharmacy && (
+                <p className="text-xs text-red-500 mt-[-4px]">
+                  {errors.pharmacy}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 h-[151px]">
-              <Label htmlFor="note" className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter">
+              <Label
+                htmlFor="note"
+                className="text-[14px] font-normal leading-[120%] text-[#2F4246] font-inter"
+              >
                 Note
               </Label>
               <Textarea
@@ -340,20 +374,22 @@ export default function MedicationRefillPage() {
       <Dialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
         <DialogContent className="sm:max-w-[400px] rounded-3xl p-6 [&>button]:hidden">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold text-neutral-slate">Discard Changes?</DialogTitle>
+            <DialogTitle className="text-lg font-bold text-neutral-slate">
+              Discard Changes?
+            </DialogTitle>
           </DialogHeader>
           <p className="text-neutral-500">
             You have unsaved changes. Are you sure you want to discard them?
           </p>
           <DialogFooter className="flex flex-row gap-3 mt-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="flex-1 rounded-xl h-11"
               onClick={() => setShowDiscardConfirm(false)}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl h-11"
               onClick={confirmDiscard}
             >
