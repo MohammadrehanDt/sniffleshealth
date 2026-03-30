@@ -5,6 +5,13 @@ export interface HealthiePatient {
   last_name: string | null;
 }
 
+export interface HealthieProvider {
+  id: string;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+}
+
 export interface CreateClientResponse {
   createClient: {
     user: HealthiePatient | null;
@@ -57,4 +64,19 @@ export interface HealthieOrganizationMember {
 
 export interface OrganizationMembersResponse {
   organizationMembers: HealthieOrganizationMember[];
+}
+
+export interface SignUpResponse {
+  signUp: {
+    user: HealthieProvider | null;
+    messages: Array<
+      | string
+      | {
+          field?: string | null;
+          message?: string | null;
+        }
+    > | null;
+    nextRequiredStep?: string | null;
+    token?: string | null;
+  };
 }

@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import type { LicenseAuditAction, LicenseStatus } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
+import { HealthieService } from "../healthie/healthie.service";
 import { MailService } from "../mail/mail.service";
 import type { VerifyDoctorDto } from "./dto/verify-doctor.dto";
 import type { VerifyLicenseDto } from "./dto/verify-license.dto";
@@ -17,6 +18,9 @@ export class AdminService {
 
   @Inject(MailService)
   private readonly mailService!: MailService;
+
+  @Inject(HealthieService)
+  private readonly healthieService!: HealthieService;
 
   async getDashboardStats() {
     const today = new Date();
@@ -117,6 +121,36 @@ export class AdminService {
     }
 
     const isVerify = dto.action === "VERIFY";
+
+    if (isVerify) {
+      if (!doctor.npiNumber) {
+        throw new BadRequestException("Doctor is missing NPI number");
+      }
+
+      if (!doctor.phone) {
+        throw new BadRequestException("Doctor is missing phone number");
+      }
+
+      try {
+        await this.healthieService.ensureProviderIdForDoctor({
+          userId: doctor.id,
+          email: doctor.email,
+          fullName: doctor.fullName,
+          npiNumber: doctor.npiNumber,
+          phone: doctor.phone,
+          healthieProviderId: doctor.healthieProviderId,
+        });
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Unknown Healthie provisioning error";
+
+        throw new BadRequestException(
+          `Doctor approval failed because Healthie provider provisioning did not complete: ${message}`,
+        );
+      }
+    }
 
     const updatedDoctor = await this.prisma.user.update({
       where: { id: doctorId },

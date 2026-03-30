@@ -89,7 +89,6 @@ export class AuthService {
     });
 
     if (isDoctor) {
-      this.syncHealthieProvider(user);
       return {
         pendingVerification: true,
         message:
@@ -202,7 +201,6 @@ export class AuthService {
     });
 
     if (isDoctor) {
-      this.syncHealthieProvider(updatedUser);
       return {
         pendingVerification: true,
         message:
@@ -247,10 +245,6 @@ export class AuthService {
     if (user.role === UserRole.PATIENT && !user.healthiePatientId) {
       this.syncHealthiePatient(user);
     }
-    if (user.role === UserRole.DOCTOR && !user.healthieProviderId) {
-      this.syncHealthieProvider(user);
-    }
-
     return this.issueToken(user);
   }
 
@@ -512,35 +506,6 @@ export class AuthService {
 
     this.healthieService
       .createPatientForUser(user.id, user.email, user.fullName)
-      .catch(() => {});
-  }
-
-  private syncHealthieProvider(user: {
-    id: string;
-    role: UserRole;
-    npiNumber?: string | null;
-    healthieProviderId?: string | null;
-  }) {
-    if (
-      user.role !== UserRole.DOCTOR ||
-      !user.npiNumber ||
-      user.healthieProviderId
-    ) {
-      return;
-    }
-
-    this.healthieService
-      .findProviderIdByNpi(user.npiNumber)
-      .then((providerId) => {
-        if (!providerId) {
-          return;
-        }
-
-        return this.prisma.user.update({
-          where: { id: user.id },
-          data: { healthieProviderId: providerId },
-        });
-      })
       .catch(() => {});
   }
 
