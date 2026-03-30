@@ -12,6 +12,7 @@ import type {
   HealthieRequestedPayment,
   OfferingsResponse,
   OrganizationMembersResponse,
+  SignUpResponse,
 } from "./healthie.types";
 
 const MAX_RETRIES = 2;
@@ -97,6 +98,39 @@ export class HealthieService {
       ) ?? null;
 
     return match?.id ?? null;
+  }
+
+  async ensureProviderIdForDoctor(input: {
+    userId: string;
+    email: string;
+    fullName: string | null;
+    npiNumber: string;
+    phone: string | null;
+    healthieProviderId?: string | null;
+  }): Promise<string> {
+    if (input.healthieProviderId) {
+      return input.healthieProviderId;
+    }
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id: input.userId },
+      select: { healthieProviderId: true },
+    });
+
+    if (existingUser?.healthieProviderId) {
+      return existingUser.healthieProviderId;
+    }
+
+    const existingProviderId = await this.findProviderIdByNpi(input.npiNumber);
+    if (existingProviderId) {
+      await this.prisma.user.update({
+        where: { id: input.userId },
+        data: { healthieProviderId: existingProviderId },
+      });
+      return existingProviderId;
+    }
+
+    return this.createProviderForDoctor(input);
   }
 
   async ensurePatientIdForUser(
@@ -334,8 +368,6 @@ export class HealthieService {
       },
     });
 
-    console.log("Healthie offerings response:", JSON.stringify(json));
-
     if (json.errors?.length) {
       throw new BadRequestException(
         `Healthie offerings request failed: ${JSON.stringify(json.errors)}`,
@@ -362,6 +394,92 @@ export class HealthieService {
       wait: "~5 min wait",
     }));
   }
+
+  private async createProviderForDoctor(input: {
+    userId: string;
+    email: string;
+    fullName: string | null;
+    npiNumber: string;
+    phone: string | null;
+  }): Promise<string> {
+    const { firstName, lastName } = this.splitName(input.fullName);
+    const { signupRole, providerType } = this.getDoctorProvisioningConfig();
+    const mutation = `
+      mutation SignUp($input: signUpInput) {
+        signUp(input: $input) {
+          user {
+            id
+            email
+            first_name
+            last_name
+          }
+          messages
+          nextRequiredStep
+          token
+        }
+      }
+    `;
+
+    const generatedPassword = this.generateHealthiePassword();
+    const json = await this.executeGraphql<SignUpResponse>({
+      query: mutation,
+      variables: {
+        input: {
+          role: signupRole,
+          email: input.email,
+          first_name: firstName,
+          last_name: lastName,
+          legal_name: input.fullName,
+          phone_number: input.phone,
+          provider_type: providerType,
+          password: generatedPassword,
+          timezone: "America/New_York",
+        },
+      },
+    });
+
+    if (json.errors?.length) {
+      throw new BadRequestException(
+        `Healthie provider creation failed: ${JSON.stringify(json.errors)}`,
+      );
+    }
+
+    const result = json.data?.signUp;
+    if (result?.messages?.length) {
+      const messageText = result.messages
+        .map((message) =>
+          typeof message === "string"
+            ? message
+            : (message.message ??
+              message.field ??
+              "Unknown Healthie signup error"),
+        )
+        .join(", ");
+
+      throw new BadRequestException(
+        `Healthie provider creation failed: ${messageText}`,
+      );
+    }
+
+    const providerId = result?.user?.id;
+    if (!providerId) {
+      throw new BadRequestException(
+        "Healthie provider creation did not return a provider ID.",
+      );
+    }
+
+    await this.prisma.user.update({
+      where: { id: input.userId },
+      data: { healthieProviderId: providerId },
+    });
+
+    this.logger.log(
+      `Healthie provider ${providerId} created for doctor ${input.userId}`,
+    );
+
+    return providerId;
+  }
+
   private async executeGraphql<TData>(input: {
     query: string;
     variables?: Record<string, unknown>;
@@ -417,6 +535,32 @@ export class HealthieService {
     return {
       firstName: trimmed.slice(0, spaceIndex),
       lastName: trimmed.slice(spaceIndex + 1),
+    };
+  }
+
+  private generateHealthiePassword() {
+    return `Sh!${Math.random().toString(36).slice(-10)}9A`;
+  }
+
+  private getDoctorProvisioningConfig() {
+    const signupRole = this.configService.get<string>(
+      "HEALTHIE_PROVIDER_SIGNUP_ROLE",
+    );
+
+    if (!signupRole) {
+      throw new BadRequestException(
+        "HEALTHIE_PROVIDER_SIGNUP_ROLE is not configured. Set it to the Healthie signup role your organization uses for physician/provider creation.",
+      );
+    }
+
+    const providerType = this.configService.get<string>(
+      "HEALTHIE_PROVIDER_TYPE",
+      "Physician",
+    );
+
+    return {
+      signupRole,
+      providerType,
     };
   }
 }

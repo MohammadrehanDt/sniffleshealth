@@ -20,6 +20,8 @@ export const envSchema = z.object({
     .string()
     .url()
     .default("https://api.gethealthie.com/graphql"),
+  HEALTHIE_PROVIDER_SIGNUP_ROLE: z.string().min(1).optional(),
+  HEALTHIE_PROVIDER_TYPE: z.string().min(1).default("Physician"),
   HEALTHIE_TEXT_CONSULTATION_OFFERING_ID: z.string().optional(),
   HEALTHIE_AUDIO_VIDEO_CONSULTATION_OFFERING_ID: z.string().optional(),
 });
