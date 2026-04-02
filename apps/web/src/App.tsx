@@ -11,6 +11,7 @@ import { GuestRoute } from "@/features/auth/components/GuestRoute";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import {
   DoctorDashboardPage,
+  DoctorPendingVerificationPage,
   ForgotPasswordPage,
   LoginPage,
   ResetPasswordPage,
@@ -35,6 +36,8 @@ import {
   AddressDetails,
   Dashboard,
   ProfilePage,
+  MedicationRefill,
+  PatientMedicalProfile
 } from "@/features/user/pages";
 import { AppointmentsPage } from "@/features/appointments/pages";
 import { FindingDoctor, DoctorChat } from "@/features/doctor/pages";
@@ -42,9 +45,12 @@ import {
   PharmacySelection,
   PharmacyConfirmation,
 } from "@/features/pharmacy/pages";
+import IntakeFlowPage from "@/features/intake/pages/IntakeFlowPage";
 import Prescription from "./pages/Prescription";
 import NotFound from "./pages/NotFound";
 import { queryClient } from "@/lib/query-client";
+import AdminDashboardPage from "@/features/admin/pages/AdminDashboard";
+import LicenseListPage from "@/features/licenses/pages/LicenseListPage";
 
 export default function App() {
   return (
@@ -58,6 +64,7 @@ export default function App() {
           <Routes>
             <Route element={<PublicLayout />}>
               <Route path={ROUTES.HOME} element={<LandingPage />} />
+              <Route path={ROUTES.INTAKE} element={<IntakeFlowPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route
@@ -77,6 +84,14 @@ export default function App() {
               }
             />
             <Route
+              path={ROUTES.DOCTOR_PENDING_VERIFICATION}
+              element={
+                <GuestRoute>
+                  <DoctorPendingVerificationPage />
+                </GuestRoute>
+              }
+            />
+            <Route
               path={ROUTES.FORGOT_PASSWORD}
               element={<ForgotPasswordPage />}
             />
@@ -85,7 +100,7 @@ export default function App() {
               element={<ResetPasswordPage />}
             />
             <Route path={ROUTES.SYMPTOMS} element={<Symptoms />} />
-            <Route path={ROUTES.MEDICAL_PROFILE} element={<MedicalProfile />} />
+            <Route path={ROUTES.MEDICAL_PROFILE_OLD} element={<MedicalProfile />} />
             <Route path={ROUTES.SUMMARY} element={<SummaryConsultation />} />
             <Route path={ROUTES.CONSULTATION} element={<Consultation />} />
             <Route
@@ -130,6 +145,14 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.PATIENT_MEDICAL_PROFILE + "/:id?"}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <PatientMedicalProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path={ROUTES.APPOINTMENTS}
                 element={
                   <ProtectedRoute roles={["PATIENT"]}>
@@ -138,10 +161,34 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.MEDICATION_REFILL}
+                element={
+                  <ProtectedRoute roles={["PATIENT"]}>
+                    <MedicationRefill />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path={ROUTES.DOCTOR_DASHBOARD}
                 element={
                   <ProtectedRoute roles={["DOCTOR"]}>
                     <DoctorDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DOCTOR_LICENSES}
+                element={
+                  <ProtectedRoute roles={["DOCTOR"]}>
+                    <LicenseListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.ADMIN_DASHBOARD}
+                element={
+                  <ProtectedRoute roles={["ADMIN"]}>
+                    <AdminDashboardPage />
                   </ProtectedRoute>
                 }
               />

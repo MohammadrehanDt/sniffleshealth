@@ -10,6 +10,30 @@ datasource db {
 enum UserRole {
   PATIENT
   DOCTOR
+  ADMIN
+}
+
+enum DoctorVerificationStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  REJECTED
+}
+
+enum LicenseStatus {
+  PENDING_REVIEW
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum LicenseAuditAction {
+  SUBMITTED
+  VERIFIED
+  REJECTED
+  RENEWAL_SUBMITTED
+  EXPIRED_AUTO
+  REMINDER_60_DAYS
+  REMINDER_30_DAYS
 }
 
 model User {
@@ -25,6 +49,11 @@ model User {
   height          Float?
   heightUnit      String?   @default("ft")
   avatarUrl       String?
+  healthiePatientId String?   @unique
+  healthieProviderId String?  @unique
+  verificationStatus  DoctorVerificationStatus?
+  verificationNote    String?
+  verifiedAt          DateTime?
   passwordHash              String?
   otpCode                   String?
   otpExpiresAt              DateTime?
@@ -34,7 +63,11 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  addresses       Address[]
+  addresses               Address[]
+  consultationsAsPatient  Consultation[] @relation("PatientConsultations")
+  consultationsAsDoctor   Consultation[] @relation("DoctorConsultations")
+  stateLicenses           StateLicense[] @relation("DoctorLicenses")
+  verifiedLicenses        StateLicense[] @relation("AdminVerifiedLicenses")
 }
 
 model Address {
@@ -53,4 +86,90 @@ model Address {
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+enum ConsultationStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Consultation {
+  id                String             @id @default(cuid())
+  patientId         String
+  doctorId          String?
+  healthieRequestedPaymentId String?   @unique
+  paymentStatus     String?
+  paymentAmount     String?
+  firstName         String
+  lastName          String
+  state             String
+  dob               String
+  gender            String
+  severity          Int
+  consultationType  String
+  status            ConsultationStatus @default(PENDING)
+  symptoms          Json
+  followUp          Json
+  vitals            Json
+  medicalHistory    Json
+  surgicalHistory   Json
+  allergies         Json
+  medications       Json
+  socialHistory     Json
+  soapNote          Json?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  patient           User               @relation("PatientConsultations", fields: [patientId], references: [id], onDelete: Restrict)
+  doctor            User?              @relation("DoctorConsultations", fields: [doctorId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([state])
+}
+
+model StateLicense {
+  id                String        @id @default(cuid())
+  doctorId          String
+  stateCode         String
+  licenseNumber     String
+  expiryDate        DateTime
+  obtainedDate      DateTime?
+  certificateUrl    String?
+  status            LicenseStatus @default(PENDING_REVIEW)
+  rejectionReason   String?
+  verifiedAt        DateTime?
+  verifiedByAdminId String?
+  reminder60Sent    Boolean       @default(false)
+  reminder30Sent    Boolean       @default(false)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  doctor            User          @relation("DoctorLicenses", fields: [doctorId], references: [id], onDelete: Cascade)
+  verifiedByAdmin   User?         @relation("AdminVerifiedLicenses", fields: [verifiedByAdminId], references: [id], onDelete: SetNull)
+  auditLogs         LicenseAuditLog[]
+
+  @@unique([doctorId, stateCode])
+  @@index([doctorId])
+  @@index([status])
+  @@index([expiryDate])
+}
+
+model LicenseAuditLog {
+  id            String             @id @default(cuid())
+  licenseId     String
+  action        LicenseAuditAction
+  performedById String?
+  note          String?
+  metadata      Json?
+  createdAt     DateTime           @default(now())
+
+  license       StateLicense       @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  @@index([licenseId])
+  @@index([createdAt])
 }

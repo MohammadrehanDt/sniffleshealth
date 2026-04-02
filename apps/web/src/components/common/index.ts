@@ -19,3 +19,7 @@ export type { SearchInputProps } from "./SearchInput";
 
 export { DatePickerInput } from "./DatePickerInput";
 export type { DatePickerInputProps } from "./DatePickerInput";
+
+export { FileUpload } from "./FileUpload";
+
+export { UnsupportedStateAlert } from "./UnsupportedStateAlert";

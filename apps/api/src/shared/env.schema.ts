@@ -15,6 +15,15 @@ export const envSchema = z.object({
     .default("postgresql://postgres:postgres@localhost:5432/sniffleshealth"),
   JWT_SECRET: z.string().min(1).default("replace-me"),
   JWT_EXPIRES_IN: z.string().min(1).default("7d"),
+  HEALTHIE_API_KEY: z.string().min(1).optional(),
+  HEALTHIE_API_URL: z
+    .string()
+    .url()
+    .default("https://api.gethealthie.com/graphql"),
+  HEALTHIE_PROVIDER_SIGNUP_ROLE: z.string().min(1).optional(),
+  HEALTHIE_PROVIDER_TYPE: z.string().min(1).default("Physician"),
+  HEALTHIE_TEXT_CONSULTATION_OFFERING_ID: z.string().optional(),
+  HEALTHIE_AUDIO_VIDEO_CONSULTATION_OFFERING_ID: z.string().optional(),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

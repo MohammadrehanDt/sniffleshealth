@@ -61,7 +61,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       <div
         {...containerProps}
         className={cn(
-          "flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm",
+          "flex items-center gap-4  bg-white p-4 h-12 border border-neutral-300 rounded transition-all hover:border-gray-200",
           containerClassName,
           containerProps?.className,
         )}

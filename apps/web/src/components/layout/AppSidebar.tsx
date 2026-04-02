@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/stores/auth.store";
+import { navigationByRole } from "@/components/app-shell/navigation";
 import { useLocation } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useLogout } from "@/features/auth/hooks/useAuth";
@@ -14,73 +16,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { NavLink } from "../NavLink";
 import { Logo } from "./Logo";
-
-export interface SidebarItem {
-  title: string;
-  url: string;
-  icon?: string;
-  fallbackIcon?: React.ComponentType<{ className?: string }>;
-}
-
-export interface SidebarSection {
-  label?: string;
-  items: SidebarItem[];
-}
-
-const sidebarConfig: SidebarSection[] = [
-  {
-    items: [
-      {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: "/images/sidebar/dashboard.png",
-      },
-      {
-        title: "Consultations",
-        url: "/consultations",
-        icon: "/images/sidebar/consultations.png",
-      },
-      {
-        title: "Appointments",
-        url: "/appointments",
-        icon: "/images/sidebar/appointments.png",
-      },
-      {
-        title: "Medical Profile",
-        url: "/medical-profile",
-        icon: "/images/sidebar/medical-profile.png",
-      },
-      {
-        title: "Lab Results",
-        url: "/lab-results",
-        icon: "/images/sidebar/lab.png",
-      },
-      {
-        title: "Medication Refill",
-        url: "/medication-refill",
-        icon: "/images/sidebar/medication-refill.png",
-      },
-      {
-        title: "My Profile",
-        url: "/profile",
-        icon: "/images/sidebar/my-profile.png",
-      },
-      {
-        title: "Billings",
-        url: "/billings",
-        icon: "/images/sidebar/billings.png",
-      },
-    ],
-  },
-];
+import { NavLink } from "../NavLink";
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
   const logout = useLogout();
+  const role = useAuthStore((store) => store.user?.role ?? "PATIENT");
+  const items = navigationByRole[role];
 
   return (
     <Sidebar collapsible="icon">
@@ -93,41 +38,35 @@ export function AppSidebar() {
       <Separator className="bg-sidebar-border" />
 
       <SidebarContent className="px-2 py-2">
-        {sidebarConfig.map((section) => (
-          <SidebarGroup key={section.label}>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <SidebarMenuItem key={item.url}>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton
                       asChild
-                      isActive={location.pathname === item.url}
-                      tooltip={item.title}
+                      isActive={location.pathname === item.to}
+                      tooltip={item.label}
                     >
                       <NavLink
-                        to={item.url}
+                        to={item.to}
                         end
                         className="gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
                         activeClassName="bg-sidebar-primary/15 !text-[#1B7F88] font-medium"
                       >
-                        {item.icon ? (
-                          <img
-                            src={item.icon}
-                            alt={item.title}
-                            className="h-4 w-4 shrink-0"
-                          />
-                        ) : item.fallbackIcon ? (
-                          <item.fallbackIcon className="h-4 w-4 shrink-0" />
-                        ) : null}
-                        {!collapsed && <span>{item.title}</span>}
+                        <Icon className="h-4 w-4 shrink-0" />
+                        {!collapsed && <span>{item.label}</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="px-2 pb-4">

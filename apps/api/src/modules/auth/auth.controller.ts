@@ -38,6 +38,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.register(dto);
+
+    if ("pendingVerification" in result) {
+      return { pendingVerification: true, message: result.message };
+    }
+
     setAuthCookies(res, result.accessToken, result.refreshToken);
     return { user: result.user };
   }
@@ -58,6 +63,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.completeSignup(dto);
+
+    if ("pendingVerification" in result) {
+      return { pendingVerification: true, message: result.message };
+    }
+
     setAuthCookies(res, result.accessToken, result.refreshToken);
     return { user: result.user };
   }
